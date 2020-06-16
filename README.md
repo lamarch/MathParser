@@ -43,7 +43,7 @@ Of course, you can create your own *context* system.
 		* `Expression-based`
 		* *soon* : `Python` 
 
-## Incomming features :
+## Incoming features :
 
 * Basic operator : `^`
 

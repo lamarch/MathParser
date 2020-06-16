@@ -1,8 +1,0 @@
-C:\Users\Xavier\source\repos\MathParser\MathParser\bin\Release\netcoreapp3.1\MathParser.deps.json
-C:\Users\Xavier\source\repos\MathParser\MathParser\bin\Release\netcoreapp3.1\MathParser.dll
-C:\Users\Xavier\source\repos\MathParser\MathParser\bin\Release\netcoreapp3.1\MathParser.pdb
-C:\Users\Xavier\source\repos\MathParser\MathParser\obj\Release\netcoreapp3.1\MathParser.csprojAssemblyReference.cache
-C:\Users\Xavier\source\repos\MathParser\MathParser\obj\Release\netcoreapp3.1\MathParser.AssemblyInfoInputs.cache
-C:\Users\Xavier\source\repos\MathParser\MathParser\obj\Release\netcoreapp3.1\MathParser.AssemblyInfo.cs
-C:\Users\Xavier\source\repos\MathParser\MathParser\obj\Release\netcoreapp3.1\MathParser.dll
-C:\Users\Xavier\source\repos\MathParser\MathParser\obj\Release\netcoreapp3.1\MathParser.pdb

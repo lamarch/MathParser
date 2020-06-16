@@ -1,0 +1,16 @@
+C:\Users\Xavier\source\repos\MathParser\FastMaths\bin\Release\netcoreapp3.1\FastMaths.exe
+C:\Users\Xavier\source\repos\MathParser\FastMaths\bin\Release\netcoreapp3.1\FastMaths.deps.json
+C:\Users\Xavier\source\repos\MathParser\FastMaths\bin\Release\netcoreapp3.1\FastMaths.runtimeconfig.json
+C:\Users\Xavier\source\repos\MathParser\FastMaths\bin\Release\netcoreapp3.1\FastMaths.runtimeconfig.dev.json
+C:\Users\Xavier\source\repos\MathParser\FastMaths\bin\Release\netcoreapp3.1\FastMaths.dll
+C:\Users\Xavier\source\repos\MathParser\FastMaths\bin\Release\netcoreapp3.1\FastMaths.pdb
+C:\Users\Xavier\source\repos\MathParser\FastMaths\bin\Release\netcoreapp3.1\MathParser.dll
+C:\Users\Xavier\source\repos\MathParser\FastMaths\bin\Release\netcoreapp3.1\MathParser.pdb
+C:\Users\Xavier\source\repos\MathParser\FastMaths\obj\Release\netcoreapp3.1\FastMaths.csprojAssemblyReference.cache
+C:\Users\Xavier\source\repos\MathParser\FastMaths\obj\Release\netcoreapp3.1\FastMaths.AssemblyInfoInputs.cache
+C:\Users\Xavier\source\repos\MathParser\FastMaths\obj\Release\netcoreapp3.1\FastMaths.AssemblyInfo.cs
+C:\Users\Xavier\source\repos\MathParser\FastMaths\obj\Release\netcoreapp3.1\FastMaths.csproj.CopyComplete
+C:\Users\Xavier\source\repos\MathParser\FastMaths\obj\Release\netcoreapp3.1\FastMaths.dll
+C:\Users\Xavier\source\repos\MathParser\FastMaths\obj\Release\netcoreapp3.1\FastMaths.pdb
+C:\Users\Xavier\source\repos\MathParser\FastMaths\bin\Release\netcoreapp3.1\Serilog.dll
+C:\Users\Xavier\source\repos\MathParser\FastMaths\bin\Release\netcoreapp3.1\Serilog.Sinks.Console.dll

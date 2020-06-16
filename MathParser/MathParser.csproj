@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyVersion>1.2.1.0</AssemblyVersion>
+    <Authors>polohx</Authors>
+    <Company>LuapCore</Company>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog" Version="2.9.0" />
+    <PackageReference Include="serilog.sinks.console" Version="3.1.1" />
+  </ItemGroup>
+
+</Project>

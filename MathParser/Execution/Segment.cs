@@ -20,7 +20,7 @@ namespace MathParser.Execution
 
             List<Error> errors = new List<Error>();
             foreach ( var fct in Functions.FindAll(f => f.Name == id) ) {
-                errors.Add(new Error(null, -1, $"Aucune fonction correspondante nommée '{id}' avec {args.Count} paramètres, cependant, peut-être voulez vous appeler '{id}' avec {fct.GetArgs().Count}.", Error.FormatSource("Segment", true)));
+                errors.Add(new Error(null, -1, $"Aucune fonction correspondante nommée '{id}' avec {args.Count} paramètres, cependant, peut-être voulez vous appeler '{id}' avec {fct.GetArgs().Count} paramètres.", Error.FormatSource("Segment", true)));
             }
 
             if ( errors.Count > 0 )

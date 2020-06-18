@@ -4,11 +4,14 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-
+using IronPython.Hosting;
 using MathParser;
 using MathParser.Addons;
 using MathParser.Execution;
 using MathParser.Execution.Injection;
+using MathParser.Execution.Injection.CSharp;
+using MathParser.Execution.Injection.Expressions;
+using MathParser.Execution.Injection.Python;
 
 namespace FastMaths
 {
@@ -148,15 +151,22 @@ namespace FastMaths
 
             SegmentInjector injector = new SegmentInjector(global);
 
-            var r = injector.AddCSAssemblyReference(typeof(MathAddons).Assembly);
 
-            result.Merge(r, (r, list) => list.Concat(r).ToList());
+            var assemblyLoad = injector.Load(new CSharpLoader(typeof(MathAddons).Assembly, "in_"));
 
-            result.Merge(injector.AddTypeRefMethods(typeof(Math), null), (r, list) => list.Concat(r).ToList());
+            result.Merge(assemblyLoad, (r, list) => list.Concat(r).ToList());
 
-            result.Merge(injector.AddTypeRefProperties(typeof(Math), null), (r, list) => list.Concat(r).ToList());
+            var mathsClassLoad = injector.Load(new CSharpLoader(typeof(Math), "lib_"));
 
-            result.MergeIf(injector.AddExpression("test", new Compiler().Compile("a+b*2").Value, "b", "a"), (r, list) => list.Add(r));
+            result.Merge(mathsClassLoad, (r, list) => list.Concat(r).ToList());
+
+            var exprLoad = injector.Load(new ExpressionLoader(new Compiler().Compile("a+b*2").Value, "test", "b", "a"));
+
+            result.MergeIf(exprLoad, (r, list) => list.AddRange(r));
+
+            var pythonLoad = injector.Load(new PythonLoader("", "pytest_", "def a():\n\treturn 13.5\n"));
+
+            result.Merge(pythonLoad, (r, list) => list.Concat(r).ToList());
 
             return result;
         }

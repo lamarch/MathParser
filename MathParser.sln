@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTest", "UnitTest\UnitTe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FastMaths", "FastMaths\FastMaths.csproj", "{388C62B1-81C0-4380-BDE6-8989D82E938D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ref", "Ref\Ref.csproj", "{07924CE4-A76B-4FAA-8C80-51E5D92C45C7}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{388C62B1-81C0-4380-BDE6-8989D82E938D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{388C62B1-81C0-4380-BDE6-8989D82E938D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{388C62B1-81C0-4380-BDE6-8989D82E938D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{07924CE4-A76B-4FAA-8C80-51E5D92C45C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{07924CE4-A76B-4FAA-8C80-51E5D92C45C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{07924CE4-A76B-4FAA-8C80-51E5D92C45C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{07924CE4-A76B-4FAA-8C80-51E5D92C45C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,9 +1,7 @@
 ﻿using System;
 
-namespace MathParser.Execution.Injection
+namespace MathParser.Execution.Injection.CSharp
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Field, AllowMultiple = false)]
-    internal class MathImplAttribute : Attribute
-    {
-    }
+    public class MathImplAttribute : Attribute { }
 }

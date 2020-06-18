@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-
+using IronPython.Runtime;
 using MathParser.Parsing.Nodes;
+using Microsoft.Scripting;
+using MathParser;
 
 namespace MathParser.Execution.Injection
 {
@@ -16,7 +18,45 @@ namespace MathParser.Execution.Injection
             this.segment = segment;
         }
 
-        public Result<List<Function>> AddTypeRefMethods (Type t, object rtObjRef)
+        public Result<List<Callable>> Load<TLoader> ( TLoader loader) where TLoader : ILoader
+        {
+            if(loader is null) throw new ArgumentNullException(nameof(loader));
+            
+            Result<List<Callable>> result = new Result<List<Callable>>(new List<Callable>());
+
+            Result<List<Function>> functionsResult = new Result<List<Function>>();
+
+            try {
+                functionsResult = loader.GetFunctions();
+            }
+            catch (Exception e) {
+                result.Errors.Add(new Error(e, -1, $"Impossible de charger les fonctions du loader '{typeof(TLoader)}'.", Error.FormatSource("SegmentInjector", false)));
+            }
+
+            foreach ( var func in functionsResult.Value ) {
+                result.Merge(segment.AddFunction(func), (fr, list) => list.Add<Callable>(fr));
+
+            }
+
+            Result<List<Property>> propertiesResult = new Result<List<Property>>();
+
+            try {
+                propertiesResult = loader.GetProperties();
+
+            }
+            catch (Exception e ) {
+                result.Errors.Add(new Error(e, -1, $"Impossible de charger les propriétés du loader '{typeof(TLoader)}'.", Error.FormatSource("SegmentInjector", false)));
+            }
+
+            foreach ( var prop in propertiesResult.Value ) {
+                result.Merge(segment.AddProperty(prop), (pr, list) => list.Add<Callable>(pr));
+            }
+
+            return result;
+        }
+
+        /*
+        private Result<List<Function>> AddTypeRefMethods (Type t, object rtObjRef)
         {
             Result<List<Function>> result = new Result<List<Function>>(new List<Function>());
 
@@ -32,7 +72,7 @@ namespace MathParser.Execution.Injection
             return result;
         }
 
-        public Result<List<Property>> AddTypeRefProperties (Type t, object rtObjRef)
+        private Result<List<Property>> AddTypeRefProperties (Type t, object rtObjRef)
         {
             var result = new Result<List<Property>>(new List<Property>());
             var props = from f in t.GetFields(BindingFlags.Public | (rtObjRef == null ? BindingFlags.Static : BindingFlags.Instance) | BindingFlags.FlattenHierarchy)
@@ -47,7 +87,7 @@ namespace MathParser.Execution.Injection
             return result;
         }
 
-        public Result<Function> LoadMethod (MethodInfo info, object rtObjRef)
+        private Result<Function> LoadMethod (MethodInfo info, object rtObjRef)
         {
             try {
                 return this.segment.AddFunction(ReflectionHelper.GenerateFunction(info, rtObjRef));
@@ -57,7 +97,7 @@ namespace MathParser.Execution.Injection
             }
         }
 
-        public Result<List<Function>> LoadMethods (IEnumerable<MethodInfo> methods, object rtObjRef)
+        private Result<List<Function>> LoadMethods (IEnumerable<MethodInfo> methods, object rtObjRef)
         {
             var result = new Result<List<Function>>(new List<Function>());
 
@@ -69,7 +109,7 @@ namespace MathParser.Execution.Injection
             return result;
         }
 
-        public Result<List<Function>> AddCSAssemblyReference (Assembly asm)
+        private Result<List<Function>> AddCSAssemblyReference (Assembly asm)
         {
             var methods = from t in asm.GetTypes()
                           from m in t.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
@@ -82,8 +122,7 @@ namespace MathParser.Execution.Injection
         }
 
 
-        public Result<Function> AddExpression (string name, Expression expression, params string[] parameters) => this.segment.AddFunction(new Function(name, ctx => expression.Eval(ctx), parameters));
-
-
+        private Result<Function> AddExpression (string name, Expression expression, params string[] parameters) => this.segment.AddFunction(new Function(name, ctx => expression.Eval(ctx), parameters));
+        */
     }
 }

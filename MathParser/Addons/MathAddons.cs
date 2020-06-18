@@ -1,6 +1,7 @@
 ﻿using System;
 
 using MathParser.Execution.Injection;
+using MathParser.Execution.Injection.CSharp;
 
 namespace MathParser.Addons
 {

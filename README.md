@@ -19,7 +19,9 @@ if(result.HasErrors){
 }
 ```
 
-Of course, you can create your own *context* system.
+- This parser support a contextual execution. You can add and remove functions and properties, from other parsed maths-expression, from `C# assemblies`, or from `Python` code. Of course, you can create your own *context* system to support `JavaScript` code or whatever you want. 
+
+- The execution engine uses a stack memory, to allow local variable (like parameters). When a *callable* (function or property) is defined, it's allocated on the global segment, available everywhere.
 
 ## Features :
 
@@ -41,15 +43,12 @@ Of course, you can create your own *context* system.
 	* Functions : 
 		* `C# native`
 		* `Expression-based`
-		* *soon* : `Python` 
+		* `Python` 
 
 ## Incoming features :
 
 * Basic operator : `^`
 
 * Properties :
-	* `Python`
-
-* Functions :
 	* `Python`
 

@@ -5,26 +5,37 @@ namespace MathParser
 {
     public class Error
     {
-        private Exception e;
-        private int position;
-        private string message;
-        private string source;
 
-        public Error (Exception e, int position, string message, string source)
+        public Error (string name = "unknown name", string message = "unknown message", string source = "unknown source", string code = "0x0000", int position = -1, bool isRuntime = false, int calleLine = -1, string memberName = "unknown member", string filePath = "unknown file path", Exception exception = null)
         {
-            E = e;
-            Position = position;
+            Name = name;
             Message = message;
             Source = source;
+            Code = code;
+            Position = position;
+            IsRuntime = isRuntime;
+            CallerLine = calleLine;
+            CallerMember = memberName;
+            CallerFilePath = filePath;
+            Exception = exception;
         }
 
-        public static string FormatSource (string simpleName, bool isRuntime, [CallerLineNumber] int ln = -1, [CallerMemberName] string mm = "unknown") => $"{(isRuntime ? "Runtime" : "Compiletime")} : {simpleName} [{mm} at {ln}]";
+        public string Name { get; private set; }
+        public string Message { get; private set; }
+        public string Source { get; private set; }
+        public string Code { get; private set; }
+        public int Position { get; private set; }
+        public bool IsRuntime { get; private set; }
+        public int CallerLine { get; private set; }
+        public string CallerMember { get; private set; }
+        public string CallerFilePath { get; private set; }
+        public Exception Exception { get; private set; }
 
-        public Exception E { get => this.e; set => this.e = value; }
-        public int Position { get => this.position; set => this.position = value; }
-        public string Message { get => this.message; set => this.message = value; }
-        public string Source { get => this.source; set => this.source = value; }
+        public void SetPosition (int pos) => Position = pos;
+        
+        
+        public override string ToString ( ) => $"{Name} ({(IsRuntime ? "run-time" : "compile-time")} {Code}) : \"{Message}\" [position : {Position} from {Source}]";
 
-        public override string ToString ( ) => $"{Message} [{Source}] ({Position})";
+
     }
 }

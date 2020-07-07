@@ -24,7 +24,7 @@ namespace MathParser
         public void SetErrorsPosition (int p)
         {
             foreach ( var e in Errors ) {
-                e.Position = p;
+                e.SetPosition(p);
             }
         }
 

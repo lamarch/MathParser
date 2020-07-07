@@ -30,7 +30,7 @@ namespace MathParser.Execution.Injection
                 functionsResult = loader.GetFunctions();
             }
             catch (Exception e) {
-                result.Errors.Add(new Error(e, -1, $"Impossible de charger les fonctions du loader '{typeof(TLoader)}'.", Error.FormatSource("SegmentInjector", false)));
+                result.Errors.Add(ErrorCodes.LOAD_FUNCTIONS(typeof(TLoader).ToString(), e));
             }
 
             foreach ( var func in functionsResult.Value ) {
@@ -45,7 +45,7 @@ namespace MathParser.Execution.Injection
 
             }
             catch (Exception e ) {
-                result.Errors.Add(new Error(e, -1, $"Impossible de charger les propriétés du loader '{typeof(TLoader)}'.", Error.FormatSource("SegmentInjector", false)));
+                result.Errors.Add(ErrorCodes.LOAD_PROPERTIES(typeof(TLoader).ToString(), e));
             }
 
             foreach ( var prop in propertiesResult.Value ) {

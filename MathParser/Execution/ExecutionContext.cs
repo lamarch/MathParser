@@ -11,7 +11,7 @@ namespace MathParser.Execution
 
         public List<Error> Errors { get; set; } = new List<Error>();
 
-        public int MaxStackCapacity = 0;
+        public int StackCount = 0;
 
         public ExecutionContext (Segment global)
         {
@@ -58,12 +58,12 @@ namespace MathParser.Execution
 
         public Result<double> Call (Callable callable)
         {
-            if ( this.MaxStackCapacity++ == int.MaxValue ) {
-                return new Result<double>(new Error(new StackOverflowException(), -1, "La limite de la pile des appels a été dépassée. Vérifié que vous n'avez pas fait de boucle infini via des appels récursifs.", Error.FormatSource("ExecutionContext", true)));
+            if ( ++this.StackCount == int.MaxValue ) {
+                return new Result<double>(ErrorCodes.STACK_OVERFLOW(-1));
             }
-
+            
             var result = callable.Call(this);
-            this.MaxStackCapacity--;
+            this.StackCount--;
             return result;
         }
 

@@ -55,7 +55,7 @@ namespace MathParser.Execution.Injection.Python
                     return new Result<double>((double)engine.Operations.InvokeMember(scope, funcType.func_name));
                 return new Result<double>((double)engine.Operations.InvokeMember(scope, funcType.func_name, args.ToArray()));
             }catch(Exception e ) {
-                return new Result<double>(new Error(e, -1, $"Impossible d'invoquer la fonction '{funcType.func_name}'.", Error.FormatSource("PythonLoader", true)));
+                return new Result<double>(ErrorCodes.FUNCTION_CALL(funcType.func_name, "Python", e));
             }
         }
 

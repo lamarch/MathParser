@@ -76,14 +76,14 @@ namespace MathParser.Execution.Injection
 
                     result.Value.Add(function);
 
-                }catch(Exception e ) {
-                    result.Errors.Add(new Error(e, -1, $"Impossible de créer la fonction '{funcName}'.", Error.FormatSource("Loader", false)));
+                }catch(Exception e) {
+                    result.Errors.Add(ErrorCodes.FUNCTION_CREATION(funcName, e));
                 }
             }
 
             return result;
         }
 
-        protected string ParameterPrefix ( ) => "p__";
+        protected string ParameterPrefix ( ) => "__p__";
     }
 }

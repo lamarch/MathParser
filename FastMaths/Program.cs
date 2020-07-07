@@ -129,7 +129,8 @@ namespace FastMaths
 
 
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine($"Erreur n°{i + 1} : {error.Message} [{error.Source}].");
+                    //Console.WriteLine($"Erreur n°{i + 1} : {error.Message} [{error.Source}].");
+                    PrintError(error, i + 1);
                     Console.ResetColor();
 
                 }

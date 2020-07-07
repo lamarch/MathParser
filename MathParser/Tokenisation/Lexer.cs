@@ -29,15 +29,9 @@ namespace MathParser.Tokenisation
 
                     symbols.Add(GetSymbolFromToken(stream));
                 }
-                catch ( LexerException e ) {
-                    errors.Add(new Error(e, stream.CurrentPosition, "Signe inconnu ou interdit.", $"Lexer ['{Helper.MemberName()}' at line {Helper.LineNumber()}]"));
+                catch ( LexerException ) {
+                    errors.Add(ErrorCodes.UNKNOWN_CHAR(stream.CurrentPosition));
                 }
-                catch ( Exception e ) {
-                    errors.Add(new Error(e, stream.CurrentPosition, "Erreur inconnue.", $"Lexer ['{Helper.MemberName()}' at line {Helper.LineNumber()}]"));
-                }
-
-
-
 
             }
 

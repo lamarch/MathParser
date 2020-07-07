@@ -168,16 +168,16 @@ namespace MathParser.Parsing
                 return leaf;
             }
 
-            errors.Add(new Error(null, GetSymbolPosition(), "Une valeur est attendue.", Error.FormatSource("Parser", false)));
+            errors.Add(ErrorCodes.VALUE_EXPECTED(GetSymbolPosition()));
             return new Const(GetSymbolPosition(), 0);
         }
 
         private bool IsTypeOf (Token type) => this.symStream.Current.Token == type;
 
-        private void Expect (Token type)
+        private void Expect ( Token type)
         {
             if ( !IsTypeOf(type) )
-                errors.Add(new Error(null, GetSymbolPosition(), $"Le symbole de type '{type}' est attendu, mais le symbole de type '{symStream.Current.Token}' a été trouvé.", Error.FormatSource("Parser", false)));
+                errors.Add(ErrorCodes.TOKEN_EXPECTED("Parser.Expect", type, symStream.Current.Token, GetSymbolPosition()));
             this.symStream.Next();
         }
 

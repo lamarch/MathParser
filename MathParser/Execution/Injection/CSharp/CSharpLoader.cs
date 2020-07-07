@@ -33,7 +33,7 @@ namespace MathParser.Execution.Injection.CSharp
             try {
                 return (double)funcType.Invoke(null, args.Cast<object>().ToArray());
             }catch(Exception e ) {
-                return new Result<double>(new Error(e, -1, $"Impossible d'appeler la méthode dynamique '{funcType.Name}'.", Error.FormatSource("ExecutionContext", true)));
+                return new Result<double>(ErrorCodes.FUNCTION_CALL(funcType.Name, "CSharp", e));
             }
         }
 

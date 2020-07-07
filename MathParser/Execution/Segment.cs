@@ -20,13 +20,13 @@ namespace MathParser.Execution
 
             List<Error> errors = new List<Error>();
             foreach ( var fct in Functions.FindAll(f => f.Name == id) ) {
-                errors.Add(new Error(null, -1, $"Aucune fonction correspondante nommée '{id}' avec {args.Count} paramètres, cependant, peut-être voulez vous appeler '{id}' avec {fct.GetArgs().Count} paramètres.", Error.FormatSource("Segment", true)));
+                errors.Add(ErrorCodes.ADJUST_FUNCTION_NOT_FOUND(id, args.Count, id, fct.GetArgs().Count));
             }
 
             if ( errors.Count > 0 )
                 return new Result<Function>(errors);
 
-            return new Result<Function>(new Error(null, -1, $"La fonction {id} n'existe pas ou n'est pas atteignable.", Error.FormatSource("Segment", true)));
+            return new Result<Function>(ErrorCodes.FUNCTION_NOT_FOUND(id));
         }
 
         public Result<Property> GetProperty (string id)
@@ -40,13 +40,13 @@ namespace MathParser.Execution
                 }
             }
 
-            return new Result<Property>(new Error(null, -1, $"La propriété {id} n'existe pas ou n'est pas atteignable.", Error.FormatSource("Segment", true)));
+            return new Result<Property>(ErrorCodes.PROPERTY_NOT_FOUND(id));
         }
 
         public Result<Property> AddProperty (Property prop)
         {
             if ( Properties.Any(p => p.GetHash() == prop.GetHash()) )
-                return new Result<Property>(new Error(null, -1, $"Impossible d'ajouter la propriété {prop.Name} car elle existe déjà dans ce segment.", Error.FormatSource("Segment", false)));
+                return new Result<Property>(ErrorCodes.EXISTING_PROPERTY(prop.Name));
 
             Properties.Add(prop);
             return new Result<Property>(prop);
@@ -55,7 +55,7 @@ namespace MathParser.Execution
         public Result<Function> AddFunction (Function func)
         {
             if ( Functions.Any(f => f.GetHash() == func.GetHash()) )
-                return new Result<Function>(new Error(null, -1, $"Impossible d'ajouter la fonction {func.Name} car elle existe déjà dans ce segment.", Error.FormatSource("Segment", false)));
+                return new Result<Function>(ErrorCodes.EXISTING_FUNCTION(func.Name));
 
             Functions.Add(func);
             return new Result<Function>(func);

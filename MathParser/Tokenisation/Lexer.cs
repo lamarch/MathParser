@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-
-using MathParser.Utilities;
 
 namespace MathParser.Tokenisation
 {
     public class Lexer
     {
-        public Lexer ()
+        public Lexer ( )
         {
         }
 
@@ -16,7 +13,7 @@ namespace MathParser.Tokenisation
         {
             List<Symbol> symbols = new List<Symbol>();
             List<Error> errors = new List<Error>();
-            TokenStream stream = new TokenStream(new StringReader(code));
+            Tokenisator stream = new Tokenisator(new StringReader(code));
             Token tok = Token.Null;
 
 
@@ -38,6 +35,6 @@ namespace MathParser.Tokenisation
             return new Result<List<Symbol>>(symbols, errors);
         }
 
-        public Symbol GetSymbolFromToken (TokenStream stream) => new Symbol(stream.CurrentToken, stream.Value, stream.Identifier, stream.CurrentPosition);
+        public Symbol GetSymbolFromToken (Tokenisator stream) => new Symbol(stream.CurrentToken, stream.Value, stream.Identifier, stream.CurrentPosition);
     }
 }

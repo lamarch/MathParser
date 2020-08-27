@@ -71,7 +71,7 @@ namespace UnitTest
 
             ExecutionContext ctx = new ExecutionContext(Global);
 
-            return new Result<double>(comp.Value.Eval(ctx), ctx.Errors);
+            return new Result<double>(comp.Value.Eval(ctx).Value, ctx.Errors);
         }
 
         [TestMethod]
@@ -83,7 +83,7 @@ namespace UnitTest
 
             Expression expr = new Binary(0, (left, right) => left + right, new Const(1, leftVal), new Const(2, rightVal));
 
-            double result = expr.Eval(null);
+            double result = expr.Eval(null).Value;
 
             Assert.AreEqual(finalVal, result);
         }

@@ -3,11 +3,9 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 
-using MathParser.Utilities;
-
 namespace MathParser.Tokenisation
 {
-    public class TokenStream
+    public class Tokenisator
     {
         private readonly TextReader reader;
 
@@ -19,7 +17,7 @@ namespace MathParser.Tokenisation
         private string identifier;
         private double value;
 
-        public TokenStream (TextReader reader)
+        public Tokenisator (TextReader reader)
         {
             this.reader = reader;
 

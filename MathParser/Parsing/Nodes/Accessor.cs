@@ -11,18 +11,9 @@ namespace MathParser.Parsing.Nodes
             this.id = id;
         }
 
-        public override double Eval (IContext ctx)
+        public override Result<double> Eval (IContext ctx)
         {
-            var result = ctx.ResolveProp(this.id);
-
-            if ( result.HasErrors ) {
-                result.SetErrorsPosition(Position);
-                ctx.Errors.AddRange(result.Errors);
-                return 0;
-            }
-            else {
-                return result.Value;
-            }
+            return ctx.ResolveProp(this.id).SetErrorsPosition(Position);
         }
 
 

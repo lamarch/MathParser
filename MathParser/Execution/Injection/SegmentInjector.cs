@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using IronPython.Runtime;
-using MathParser.Parsing.Nodes;
-using Microsoft.Scripting;
-using MathParser;
 
 namespace MathParser.Execution.Injection
 {
@@ -18,10 +12,11 @@ namespace MathParser.Execution.Injection
             this.segment = segment;
         }
 
-        public Result<List<Callable>> Load<TLoader> ( TLoader loader) where TLoader : ILoader
+        public Result<List<Callable>> Load<TLoader> (TLoader loader) where TLoader : ILoader
         {
-            if(loader is null) throw new ArgumentNullException(nameof(loader));
-            
+            if ( loader is null )
+                throw new ArgumentNullException(nameof(loader));
+
             Result<List<Callable>> result = new Result<List<Callable>>(new List<Callable>());
 
             Result<List<Function>> functionsResult = new Result<List<Function>>();
@@ -29,12 +24,12 @@ namespace MathParser.Execution.Injection
             try {
                 functionsResult = loader.GetFunctions();
             }
-            catch (Exception e) {
+            catch ( Exception e ) {
                 result.Errors.Add(ErrorCodes.LOAD_FUNCTIONS(typeof(TLoader).ToString(), e));
             }
 
             foreach ( var func in functionsResult.Value ) {
-                result.Merge(segment.AddFunction(func), (fr, list) => list.Add<Callable>(fr));
+                result.Merge(this.segment.AddFunction(func), (fr, list) => list.Add<Callable>(fr));
 
             }
 
@@ -44,12 +39,12 @@ namespace MathParser.Execution.Injection
                 propertiesResult = loader.GetProperties();
 
             }
-            catch (Exception e ) {
+            catch ( Exception e ) {
                 result.Errors.Add(ErrorCodes.LOAD_PROPERTIES(typeof(TLoader).ToString(), e));
             }
 
             foreach ( var prop in propertiesResult.Value ) {
-                result.Merge(segment.AddProperty(prop), (pr, list) => list.Add<Callable>(pr));
+                result.Merge(this.segment.AddProperty(prop), (pr, list) => list.Add<Callable>(pr));
             }
 
             return result;

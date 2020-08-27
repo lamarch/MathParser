@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 using MathParser.Execution;
 
@@ -6,29 +7,23 @@ namespace MathParser.Parsing.Nodes
 {
     public class FunctionCall : Expression
     {
-        private readonly Expression[] args;
+        private readonly List<Expression> args;
         private readonly string id;
 
-        public FunctionCall (int pos, string id, Expression[] args) : base(pos)
+        public FunctionCall (int pos, string id, List<Expression> args) : base(pos)
         {
             this.args = args;
             this.id = id;
         }
 
-        public override double Eval (IContext ctx)
+        public override Result<double> Eval (IContext ctx)
         {
-            var result = ctx.ResolveFunction(this.id, this.args.Select(a => a.Eval(ctx)).ToList());
+            List<Result<double>> values = args.Select(a => a.Eval(ctx)).ToList();
 
-            if ( result.HasErrors ) {
-                result.SetErrorsPosition(Position);
-                ctx.Errors.AddRange(result.Errors);
-                return 0;
+            if(values.Any(v => v.HasErrors) ) {
+                return values.Aggregate((f1, f2) => f1.Merge(f2, (a, b) => 0));
             }
-            else {
-
-                return result.Value;
-            }
-
+            return ctx.ResolveFunction(this.id, values.Select(r => r.Value).ToList()).SetErrorsPosition(Position);
         }
     }
 }

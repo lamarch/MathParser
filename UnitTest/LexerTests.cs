@@ -14,7 +14,7 @@ namespace UnitTest
         [TestMethod]
         public void TestLexer ( )
         {
-            TokenStream lex = new TokenStream(new StringReader("a 12 12,3 45 -+*/+"));
+            Tokenisator lex = new Tokenisator(new StringReader("a 12 12,3 45 -+*/+"));
 
             Token tok = Token.EOF;
 

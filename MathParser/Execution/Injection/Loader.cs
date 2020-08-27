@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace MathParser.Execution.Injection
 {
@@ -12,7 +11,7 @@ namespace MathParser.Execution.Injection
     public abstract class Loader<T> : ILoader
     {
         private readonly string prefix;
-        public Loader(string prefix)
+        public Loader (string prefix)
         {
             this.prefix = prefix;
         }
@@ -23,7 +22,7 @@ namespace MathParser.Execution.Injection
         protected abstract Result<double> CallFunction (T funcType, List<double> args);
         protected abstract string GetFunctionName (T funcType);
 
-        protected virtual Function GetFunction(T funcType, string name)
+        protected virtual Function GetFunction (T funcType, string name)
         {
             List<string> paramaters = GetParameters(funcType);
 
@@ -58,7 +57,7 @@ namespace MathParser.Execution.Injection
 
             return new Function(name, binding, paramaters);
         }
-        
+
         public virtual Result<List<Function>> GetFunctions ( )
         {
             Result<List<Function>> result = new Result<List<Function>>(new List<Function>());
@@ -70,13 +69,14 @@ namespace MathParser.Execution.Injection
 
                 try {
 
-                    funcName = prefix + GetFunctionName(tFunc);
+                    funcName = this.prefix + GetFunctionName(tFunc);
 
                     Function function = GetFunction(tFunc, funcName);
 
                     result.Value.Add(function);
 
-                }catch(Exception e) {
+                }
+                catch ( Exception e ) {
                     result.Errors.Add(ErrorCodes.FUNCTION_CREATION(funcName, e));
                 }
             }

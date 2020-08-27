@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 using MathParser.Execution;
 
@@ -17,6 +18,18 @@ namespace MathParser.Parsing.Nodes
             this.rhs = rhs ?? throw new ArgumentNullException(nameof(rhs));
         }
 
-        public override double Eval (IContext ctx) => this.op(this.lhs.Eval(ctx), this.rhs.Eval(ctx));
+        public override Result<double> Eval (IContext ctx) 
+        {
+            var lhs_result = this.lhs.Eval(ctx);
+            var rhs_result = this.rhs.Eval(ctx);
+
+            var errors = lhs_result.Errors.Concat(rhs_result.Errors).ToList();
+
+            if(errors.Count > 0 ) {
+                return new Result<double>(0, errors);
+            }
+
+            return this.op(lhs_result.Value, rhs_result.Value); 
+        }
     }
 }

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 using MathParser.Execution;
 using MathParser.Parsing;
 using MathParser.Parsing.Nodes;
 using MathParser.Tokenisation;
-using MathParser.Utilities;
-using Serilog;
 
 namespace MathParser
 {
@@ -26,9 +23,6 @@ namespace MathParser
 
         public Result<Expression> Compile (string code)
         {
-            var log = new LoggerConfiguration()
-                .WriteTo.Console()
-                .CreateLogger();
 
             var lexResult = this.lexer.Lex(code);
 
@@ -37,7 +31,7 @@ namespace MathParser
             }
 
 
-            var parseResult = parser.Parse(new SymbolStream(lexResult.Value));
+            var parseResult = this.parser.Parse(new SymbolStream(lexResult.Value));
 
             return parseResult;
         }
@@ -47,16 +41,16 @@ namespace MathParser
         public Result<double> Evaluate (string code, IContext context)
         {
 
-            var preResult = Compile(code);
+            var compilationResult = Compile(code);
 
-            var evalValue = preResult.Value?.Eval(context);
+            if ( compilationResult.HasErrors )
+                return new Result<double>(0, compilationResult.Errors);
 
-            var errors = new List<Error>();
+            Expression root = compilationResult.Value;
 
-            errors.AddRange(preResult.Errors);
-            errors.AddRange(context.Errors);
+            var evaluationResult = root.Eval(context);
 
-            return new Result<double>(evalValue ?? 0, errors);
+            return evaluationResult;
         }
     }
 }

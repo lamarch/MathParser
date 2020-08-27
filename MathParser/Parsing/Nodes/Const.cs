@@ -11,6 +11,6 @@ namespace MathParser.Parsing.Nodes
             this.value = value;
         }
 
-        public override double Eval (IContext ctx) => this.value;
+        public override Result<double> Eval (IContext ctx) => this.value;
     }
 }

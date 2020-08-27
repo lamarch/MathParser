@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace MathParser
 {
@@ -17,7 +15,7 @@ namespace MathParser
          *          x
          *          1 = known error (0 as unknown error)
          *          0
-         *          a = module (1 = execution context, 2 = loader
+         *          a = module (1 = execution context, 2 = loader...)
          *          b = error index
          * 
          * 
@@ -33,7 +31,7 @@ namespace MathParser
          * ----------
          */
 
-        public static Error STACK_OVERFLOW ( [CallerLineNumber] int l = -1, [CallerMemberName] string m = "unknown", [CallerFilePath] string fp = "unknown" ) => new Error(
+        public static Error STACK_OVERFLOW ([CallerLineNumber] int l = -1, [CallerMemberName] string m = "unknown", [CallerFilePath] string fp = "unknown") => new Error(
             name: "Dépassement de pile",
             message: "La limite de la pile des appels a été dépassée.",
             source: "ExecutionContext.Call",
@@ -94,13 +92,13 @@ namespace MathParser
 
 
 
-       /*
-        * ----------
-        * 
-        * Segment Injector
-        * 
-        * ----------
-        */
+        /*
+         * ----------
+         * 
+         * Segment Injector
+         * 
+         * ----------
+         */
         public static Error LOAD_FUNCTIONS (string loaderName, Exception e, [CallerLineNumber] int l = -1, [CallerMemberName] string m = "unknown", [CallerFilePath] string fp = "unknown") => new Error(
             name: "Chargement des fonctions impossible",
             message: $"Impossible de charger les fonctions du loader {loaderName}.",

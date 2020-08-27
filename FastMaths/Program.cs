@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using IronPython.Hosting;
+
 using MathParser;
 using MathParser.Addons;
 using MathParser.Execution;
@@ -32,6 +32,9 @@ namespace FastMaths
 
             Console.WriteLine("Chargement des données...\n");
 
+            //Load global functions & property
+
+            #region Globals
             var result = InitGlobals();
 
             if ( result.HasErrors )
@@ -46,12 +49,12 @@ namespace FastMaths
             Console.WriteLine("Additions chargés avec succès :\n");
 
             for ( int i = 0; i < result.Value.Count; i++ ) {
-                Console.WriteLine($"{i + 1} - {result.Value[i]}");
+                Console.WriteLine($"{i + 1:D2} - {result.Value[i]}");
             }
 
 
             Separate();
-
+            #endregion
 
             while ( true ) {
                 Console.Write(prompt);
@@ -95,6 +98,9 @@ namespace FastMaths
                         break;
                     case "csload":
                         Console.WriteLine("Cette fonction n'est pas encore disponible.");
+                        break;
+                    case "define":
+                        CommandManager.Define(args);
                         break;
                     case "debug":
                         debug = !debug;
@@ -153,7 +159,7 @@ namespace FastMaths
             SegmentInjector injector = new SegmentInjector(global);
 
 
-            var assemblyLoad = injector.Load(new CSharpLoader(typeof(MathAddons).Assembly, "in_"));
+            var assemblyLoad = injector.Load(new CSharpLoader(typeof(MathAddons).Assembly, "cs_"));
 
             result.Merge(assemblyLoad, (r, list) => list.Concat(r).ToList());
 

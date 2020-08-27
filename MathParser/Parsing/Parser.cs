@@ -10,7 +10,7 @@ namespace MathParser.Parsing
     {
         private SymbolStream symStream;
 
-        private List<Error> errors = new List<Error>();
+        private readonly List<Error> errors = new List<Error>();
 
         public Parser ( )
         {
@@ -18,15 +18,17 @@ namespace MathParser.Parsing
 
         public Result<Expression> Parse (SymbolStream stream)
         {
-            errors.Clear();
+            this.errors.Clear();
 
             this.symStream = stream;
+
+
 
             var final = ParseTherm();
 
             Expect(Token.EOF);
 
-            return new Result<Expression>(final, errors);
+            return new Result<Expression>(final, this.errors);
         }
 
         private Expression ParseTherm ( )
@@ -149,7 +151,7 @@ namespace MathParser.Parsing
 
                     Expect(Token.RPar);
 
-                    return new FunctionCall(position, id, args.ToArray());
+                    return new FunctionCall(position, id, args);
 
                 }
                 //That's variable
@@ -168,16 +170,16 @@ namespace MathParser.Parsing
                 return leaf;
             }
 
-            errors.Add(ErrorCodes.VALUE_EXPECTED(GetSymbolPosition()));
+            this.errors.Add(ErrorCodes.VALUE_EXPECTED(GetSymbolPosition()));
             return new Const(GetSymbolPosition(), 0);
         }
 
         private bool IsTypeOf (Token type) => this.symStream.Current.Token == type;
 
-        private void Expect ( Token type)
+        private void Expect (Token type)
         {
             if ( !IsTypeOf(type) )
-                errors.Add(ErrorCodes.TOKEN_EXPECTED("Parser.Expect", type, symStream.Current.Token, GetSymbolPosition()));
+                this.errors.Add(ErrorCodes.TOKEN_EXPECTED("Parser.Expect", type, this.symStream.Current.Token, GetSymbolPosition()));
             this.symStream.Next();
         }
 

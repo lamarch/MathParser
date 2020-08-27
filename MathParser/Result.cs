@@ -21,11 +21,12 @@ namespace MathParser
 
         public Result ( ) : this(default, new List<Error>()) { }
 
-        public void SetErrorsPosition (int p)
+        public Result<T> SetErrorsPosition (int p)
         {
             foreach ( var e in Errors ) {
                 e.SetPosition(p);
             }
+            return this;
         }
 
         public Result<T> MergeIf<T2> (Result<T2> result, Action<T2, T> convert)

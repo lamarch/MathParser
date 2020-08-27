@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 
 namespace MathParser
 {
@@ -31,9 +30,9 @@ namespace MathParser
         public string CallerFilePath { get; private set; }
         public Exception Exception { get; private set; }
 
-        public void SetPosition (int pos) => Position = pos;
-        
-        
+        public void SetPosition (int pos) { if ( Position == -1 ) Position = pos; }
+
+
         public override string ToString ( ) => $"{Name} ({(IsRuntime ? "run-time" : "compile-time")} {Code}) : \"{Message}\" [position : {Position} from {Source}]";
 
 

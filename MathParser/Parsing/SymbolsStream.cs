@@ -16,18 +16,18 @@ namespace MathParser.Parsing
 
         public Symbol Current {
             get {
-                if(symbols.Count > 0 ) {
-                    var symbol = symbols.Peek();
+                if ( this.symbols.Count > 0 ) {
+                    var symbol = this.symbols.Peek();
 
                     //save the EOF symbol
                     //thereby we can restore it when queue is empty
                     if ( symbol.Token == Token.EOF )
-                        EOFSymbol = symbol;
+                        this.EOFSymbol = symbol;
 
                     return symbol;
                 }
                 else {
-                    return EOFSymbol;
+                    return this.EOFSymbol;
                 }
             }
         }
@@ -35,7 +35,7 @@ namespace MathParser.Parsing
         public Symbol Next ( )
         {
             if ( this.stuffAmount < 1 ) {
-                if ( symbols.Count > 0 )
+                if ( this.symbols.Count > 0 )
                     return this.symbols.Dequeue();
                 else
                     return Current;

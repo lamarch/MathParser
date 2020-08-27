@@ -11,6 +11,6 @@ namespace MathParser.Parsing.Nodes
             Position = pos;
         }
 
-        public abstract double Eval (IContext ctx);
+        public abstract Result<double> Eval (IContext ctx);
     }
 }

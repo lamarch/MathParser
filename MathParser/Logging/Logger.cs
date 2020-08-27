@@ -30,6 +30,6 @@ namespace MathParser.Logging
                 logging?.Invoke(new Log(LogLevel.Error, DateTime.Now, from, message));
         }
 
-        public bool IsOn { get; set; }
+        public bool IsOn { get; set; } = true;
     }
 }

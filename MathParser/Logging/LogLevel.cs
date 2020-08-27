@@ -1,4 +1,4 @@
-﻿namespace MathParser.Utilities
+﻿namespace MathParser.Logging
 {
     public enum LogLevel
     {

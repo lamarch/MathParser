@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using MathParser.Execution;
+using MathParser.Logging;
 using MathParser.Parsing;
 using MathParser.Parsing.Nodes;
 using MathParser.Tokenisation;
@@ -11,14 +12,17 @@ namespace MathParser
     {
         private readonly Parser parser;
         private readonly Lexer lexer;
-
+        private readonly Logger logger;
+        public LogReceiver LogReceiver { get; private set; }
 
         public Compiler ( )
         {
-            this.parser = new Parser();
+            this.logger = new Logger();
+            this.parser = new Parser(logger);
             this.lexer = new Lexer();
-        }
 
+            LogReceiver = new LogReceiver(logger);
+        }
 
 
         public Result<Expression> Compile (string code)

@@ -23,10 +23,18 @@ namespace FastMaths
         private const char MetaChar = '/';
         private const string prompt = ">";
 
-        private static bool debug = false;
+        private static bool debug = true;
 
         private static void Main ( )
         {
+            compiler.LogReceiver.OnLog += log => {
+                if ( debug ) {
+                    var pre = Console.ForegroundColor;
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+
+                    Console.WriteLine($"[{log.PostedAt}, {log.LogLevel}] {string.Format("{0,-15}",log.From)} : {log.Message} ");
+                }
+            };
 
             Greetings();
 

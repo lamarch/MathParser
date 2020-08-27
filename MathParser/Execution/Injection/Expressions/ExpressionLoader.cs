@@ -21,7 +21,7 @@ namespace MathParser.Execution.Injection.Expressions
         public ExpressionLoader (Expression expression, string name, params string[] args) : this(expression, name, args.ToList()) { }
 
         public Result<List<Function>> GetFunctions ( ) => new Result<List<Function>>(
-            new List<Function>() { new Function(this.name, ctx => this.expression.Eval(ctx), this.args) });
+            new List<Function>() { new Function(name, ctx => expression.Eval(ctx), args) });
         public Result<List<Property>> GetProperties ( ) => new Result<List<Property>>(new List<Property>());
     }
 }

@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MathParser.Logging
 {
     public class Logger
     {
-        Action<Log> logging;
-        public void Setup(Action<Log> logging)
-        {
-            this.logging = logging;
-        }
+        private Action<Log> logging;
+        public void Setup (Action<Log> logging) => this.logging = logging;
 
-        public void Info(string from, string message)
+        public void Info (string from, string message)
         {
-            if(IsOn)
+            if ( IsOn )
                 logging?.Invoke(new Log(LogLevel.Info, DateTime.Now, from, message));
         }
 

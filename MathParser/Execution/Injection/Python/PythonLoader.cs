@@ -20,19 +20,19 @@ namespace MathParser.Execution.Injection.Python
         {
             this.funcPrefix = funcPrefix;
 
-            this.engine = IronPython.Hosting.Python.CreateEngine();
-            this.scope = this.engine.CreateScope();
-            this.source = this.engine.CreateScriptSourceFromString(code, Microsoft.Scripting.SourceCodeKind.Statements);
-            this.compiled = this.source.Compile();
-            this.compiled.Execute(this.scope);
+            engine = IronPython.Hosting.Python.CreateEngine();
+            scope = engine.CreateScope();
+            source = engine.CreateScriptSourceFromString(code, Microsoft.Scripting.SourceCodeKind.Statements);
+            compiled = source.Compile();
+            compiled.Execute(scope);
 
         }
 
         protected override List<PythonFunction> GetFunctionsType ( )
         {
-            var pyFunctions = (from i in this.scope.GetItems().ToList()
+            var pyFunctions = (from i in scope.GetItems().ToList()
                                where i.Value.GetType() == typeof(PythonFunction)
-                               where ((PythonFunction)i.Value).func_name.StartsWith(this.funcPrefix)
+                               where ((PythonFunction)i.Value).func_name.StartsWith(funcPrefix)
                                select (PythonFunction)i.Value).ToList();
 
             return pyFunctions;
@@ -47,8 +47,8 @@ namespace MathParser.Execution.Injection.Python
         {
             try {
                 if ( args.Count == 0 )
-                    return new Result<double>((double)this.engine.Operations.InvokeMember(this.scope, funcType.func_name));
-                return new Result<double>((double)this.engine.Operations.InvokeMember(this.scope, funcType.func_name, args.ToArray()));
+                    return new Result<double>((double)engine.Operations.InvokeMember(scope, funcType.func_name));
+                return new Result<double>((double)engine.Operations.InvokeMember(scope, funcType.func_name, args.ToArray()));
             }
             catch ( Exception e ) {
                 return new Result<double>(ErrorCodes.FUNCTION_CALL(funcType.func_name, "Python", e));

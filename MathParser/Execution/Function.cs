@@ -19,9 +19,9 @@ namespace MathParser.Execution
 
         public Function (string name, Func<IContext, Result<double>> func, params string[] args) : this(name, func, args.ToList()) { }
 
-        public override Result<double> Call (IContext ctx) => this.func(ctx);
-        public override List<string> GetArgs ( ) => this.arguments;
-        public override string GetHash ( ) => Helper.Hash(Name + this.arguments.Count);
+        public override Result<double> Call (IContext ctx) => func(ctx);
+        public override List<string> GetArgs ( ) => arguments;
+        public override string GetHash ( ) => Helper.Hash(Name + arguments.Count);
         public override Result<double> Init (IContext context) => 0.0d;
     }
 }

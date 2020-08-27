@@ -69,7 +69,7 @@ namespace MathParser.Execution.Injection
 
                 try {
 
-                    funcName = this.prefix + GetFunctionName(tFunc);
+                    funcName = prefix + GetFunctionName(tFunc);
 
                     Function function = GetFunction(tFunc, funcName);
 

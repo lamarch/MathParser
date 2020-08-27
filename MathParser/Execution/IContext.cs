@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 
-using MathParser.Parsing.Nodes;
-
 namespace MathParser.Execution
 {
     public interface IContext

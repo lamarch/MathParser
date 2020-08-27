@@ -15,9 +15,9 @@
             Id = id;
         }
 
-        public Token Token { get => this.token; set => this.token = value; }
-        public double Value { get => this.value; set => this.value = value; }
-        public int Position { get => this.position; set => this.position = value; }
-        public string Id { get => this.id; set => this.id = value; }
+        public Token Token { get => token; set => token = value; }
+        public double Value { get => value; set => this.value = value; }
+        public int Position { get => position; set => position = value; }
+        public string Id { get => id; set => id = value; }
     }
 }

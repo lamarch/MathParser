@@ -21,7 +21,7 @@ namespace MathParser.Parsing.Nodes
 
             if ( leafResult.HasErrors )
                 return leafResult.SetErrorsPosition(Position);
-            return this.op(leafResult.Value);
+            return op(leafResult.Value);
         }
     }
 }

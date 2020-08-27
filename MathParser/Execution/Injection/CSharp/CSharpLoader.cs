@@ -11,12 +11,12 @@ namespace MathParser.Execution.Injection.CSharp
 
         public CSharpLoader (Assembly assembly, string prefix) : base(prefix)
         {
-            this.typesToLoad = assembly.GetTypes().ToList();
+            typesToLoad = assembly.GetTypes().ToList();
         }
 
         public CSharpLoader (Type type, string prefix) : base(prefix)
         {
-            this.typesToLoad.Add(type);
+            typesToLoad.Add(type);
         }
 
         public override Result<List<Property>> GetProperties ( ) => new List<Property>();
@@ -32,7 +32,7 @@ namespace MathParser.Execution.Injection.CSharp
             }
         }
 
-        protected override List<MethodInfo> GetFunctionsType ( ) => (from t in this.typesToLoad
+        protected override List<MethodInfo> GetFunctionsType ( ) => (from t in typesToLoad
                                                                      from m in t.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
 
                                                                      where m.ReturnType == typeof(double)

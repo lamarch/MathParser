@@ -16,38 +16,38 @@ namespace MathParser.Parsing
 
         public Symbol Current {
             get {
-                if ( this.symbols.Count > 0 ) {
-                    var symbol = this.symbols.Peek();
+                if ( symbols.Count > 0 ) {
+                    var symbol = symbols.Peek();
 
                     //save the EOF symbol
                     //thereby we can restore it when queue is empty
                     if ( symbol.Token == Token.EOF )
-                        this.EOFSymbol = symbol;
+                        EOFSymbol = symbol;
 
                     return symbol;
                 }
                 else {
-                    return this.EOFSymbol;
+                    return EOFSymbol;
                 }
             }
         }
 
         public Symbol Next ( )
         {
-            if ( this.stuffAmount < 1 ) {
-                if ( this.symbols.Count > 0 )
-                    return this.symbols.Dequeue();
+            if ( stuffAmount < 1 ) {
+                if ( symbols.Count > 0 )
+                    return symbols.Dequeue();
                 else
                     return Current;
             }
             //somebody stuff the queue
             else {
-                this.stuffAmount--;
+                stuffAmount--;
                 return Current;
             }
 
         }
 
-        public void Stuff (int amount) => this.stuffAmount += amount;
+        public void Stuff (int amount) => stuffAmount += amount;
     }
 }

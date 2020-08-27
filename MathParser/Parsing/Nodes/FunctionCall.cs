@@ -20,10 +20,10 @@ namespace MathParser.Parsing.Nodes
         {
             List<Result<double>> values = args.Select(a => a.Eval(ctx)).ToList();
 
-            if(values.Any(v => v.HasErrors) ) {
+            if ( values.Any(v => v.HasErrors) ) {
                 return values.Aggregate((f1, f2) => f1.Merge(f2, (a, b) => 0));
             }
-            return ctx.ResolveFunction(this.id, values.Select(r => r.Value).ToList()).SetErrorsPosition(Position);
+            return ctx.ResolveFunction(id, values.Select(r => r.Value).ToList()).SetErrorsPosition(Position);
         }
     }
 }

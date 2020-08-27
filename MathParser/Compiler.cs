@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-
+﻿
 using MathParser.Execution;
 using MathParser.Logging;
 using MathParser.Parsing;
@@ -17,9 +16,9 @@ namespace MathParser
 
         public Compiler ( )
         {
-            this.logger = new Logger();
-            this.parser = new Parser(logger);
-            this.lexer = new Lexer();
+            logger = new Logger();
+            parser = new Parser(logger);
+            lexer = new Lexer();
 
             LogReceiver = new LogReceiver(logger);
         }
@@ -28,14 +27,14 @@ namespace MathParser
         public Result<Expression> Compile (string code)
         {
 
-            var lexResult = this.lexer.Lex(code);
+            var lexResult = lexer.Lex(code);
 
             if ( lexResult.Errors.Count > 0 ) {
                 return new Result<Expression>(null, lexResult.Errors);
             }
 
 
-            var parseResult = this.parser.Parse(new SymbolStream(lexResult.Value));
+            var parseResult = parser.Parse(new SymbolStream(lexResult.Value));
 
             return parseResult;
         }

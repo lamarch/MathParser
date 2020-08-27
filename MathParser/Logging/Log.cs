@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MathParser.Logging
 {
@@ -8,10 +6,10 @@ namespace MathParser.Logging
     {
         public Log (LogLevel logLevel, DateTime postedAt, string from, string message)
         {
-            this.LogLevel = logLevel;
-            this.PostedAt = postedAt;
-            this.From = from;
-            this.Message = message;
+            LogLevel = logLevel;
+            PostedAt = postedAt;
+            From = from;
+            Message = message;
         }
 
         public LogLevel LogLevel { get; private set; }

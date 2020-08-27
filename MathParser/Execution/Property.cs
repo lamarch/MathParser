@@ -21,16 +21,16 @@ namespace MathParser.Execution
             this.action = action;
         }
 
-        public override Result<double> Call (IContext context) => this.isInit ? new Result<double>(this.value) : Init(context);
+        public override Result<double> Call (IContext context) => isInit ? new Result<double>(value) : Init(context);
         public override List<string> GetArgs ( ) => new List<string>();
         public override string GetHash ( ) => Helper.Hash(Name + -1);
 
         public override Result<double> Init (IContext context)
         {
-            var result = this.action(context);
-            this.value = result.Value;
+            var result = action(context);
+            value = result.Value;
             if ( !result.HasErrors )
-                this.isInit = true;
+                isInit = true;
             return result;
         }
     }

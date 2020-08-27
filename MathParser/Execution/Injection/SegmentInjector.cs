@@ -29,7 +29,7 @@ namespace MathParser.Execution.Injection
             }
 
             foreach ( var func in functionsResult.Value ) {
-                result.Merge(this.segment.AddFunction(func), (fr, list) => list.Add<Callable>(fr));
+                result.Merge(segment.AddFunction(func), (fr, list) => list.Add<Callable>(fr));
 
             }
 
@@ -44,7 +44,7 @@ namespace MathParser.Execution.Injection
             }
 
             foreach ( var prop in propertiesResult.Value ) {
-                result.Merge(this.segment.AddProperty(prop), (pr, list) => list.Add<Callable>(pr));
+                result.Merge(segment.AddProperty(prop), (pr, list) => list.Add<Callable>(pr));
             }
 
             return result;

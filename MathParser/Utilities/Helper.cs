@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace MathParser.Utilities
 {
@@ -14,6 +15,13 @@ namespace MathParser.Utilities
         {
             HashAlgorithm algo = SHA256.Create();
             return Encoding.ASCII.GetString(algo.ComputeHash(Encoding.UTF8.GetBytes(str)));
+        }
+
+        private static readonly Regex _onlyLetters = new Regex("[^a-zA-Z_]");
+
+        public static bool IsValidName(string str)
+        {
+            return !_onlyLetters.IsMatch(str);
         }
     }
 }

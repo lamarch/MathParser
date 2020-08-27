@@ -61,7 +61,7 @@ namespace MathParser
          */
         public static Error FUNCTION_CALL (string funcName, string loaderName, Exception e, [CallerLineNumber] int l = -1, [CallerMemberName] string m = "unknown", [CallerFilePath] string fp = "unknown") => new Error(
             name: "Appel de fonction impossible",
-            message: $"Impossible d'invoquer la fonction dynamique {funcName}.",
+            message: $"Impossible d'invoquer la fonction dynamique '{funcName}'.",
             source: $"Loader.CallFunction({loaderName})",
             code: "0x1021",
             position: -1,
@@ -74,7 +74,7 @@ namespace MathParser
 
         public static Error FUNCTION_CREATION (string funcName, Exception e, [CallerLineNumber] int l = -1, [CallerMemberName] string m = "unknown", [CallerFilePath] string fp = "unknown") => new Error(
             name: "Création de fonction impossible",
-            message: $"Impossible de créer la fonction {funcName}.",
+            message: $"Impossible de créer la fonction '{funcName}'.",
             source: "Loader.GetFunctions",
             code: "0x1022",
             position: -1,
@@ -101,7 +101,7 @@ namespace MathParser
          */
         public static Error LOAD_FUNCTIONS (string loaderName, Exception e, [CallerLineNumber] int l = -1, [CallerMemberName] string m = "unknown", [CallerFilePath] string fp = "unknown") => new Error(
             name: "Chargement des fonctions impossible",
-            message: $"Impossible de charger les fonctions du loader {loaderName}.",
+            message: $"Impossible de charger les fonctions du loader '{loaderName}'.",
             source: "SegmentInjector.Load",
             code: "0x1031",
             position: -1,
@@ -180,7 +180,7 @@ namespace MathParser
 
         public static Error EXISTING_FUNCTION (string funcName, [CallerLineNumber] int l = -1, [CallerMemberName] string m = "unknown", [CallerFilePath] string fp = "unknown") => new Error(
             name: "Fonction déjà existante",
-            message: $"Impossible de créer la fonction {funcName} car elle existe déjà.",
+            message: $"Impossible de créer la fonction '{funcName}' car elle existe déjà.",
             source: "Segment.AddFunction",
             code: "0x1044",
             position: -1,
@@ -192,7 +192,7 @@ namespace MathParser
             );
         public static Error EXISTING_PROPERTY (string propName, [CallerLineNumber] int l = -1, [CallerMemberName] string m = "unknown", [CallerFilePath] string fp = "unknown") => new Error(
             name: "Propriété déjà existante",
-            message: $"Impossible de créer la propriété {propName} car elle existe déjà.",
+            message: $"Impossible de créer la propriété '{propName}' car elle existe déjà.",
             source: "Segment.AddProperty",
             code: "0x1045",
             position: -1,
@@ -227,7 +227,7 @@ namespace MathParser
 
         public static Error TOKEN_EXPECTED (string source, Token expType, Token found, int position, [CallerLineNumber] int l = -1, [CallerMemberName] string m = "unknown", [CallerFilePath] string fp = "unknown") => new Error(
             name: "Symbole inattendu",
-            message: $"Le symbole de type {expType} est attendu, mais le symbole de type {found} a été trouvé à sa place.",
+            message: $"Le symbole de type '{expType}' est attendu, mais le symbole de type '{found}' a été trouvé à sa place.",
             source: source,
             code: "0x1052",
             position: position,

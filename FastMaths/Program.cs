@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 using MathParser;
 using MathParser.Addons;
@@ -19,6 +18,7 @@ namespace FastMaths
     {
         private static readonly Compiler compiler = new Compiler();
         private static readonly Segment global = new Segment();
+        private static readonly SegmentInjector injector = new SegmentInjector(global);
 
         private const char MetaChar = '/';
         private const string prompt = ">";
@@ -32,7 +32,7 @@ namespace FastMaths
                     var pre = Console.ForegroundColor;
                     Console.ForegroundColor = ConsoleColor.Magenta;
 
-                    Console.WriteLine($"[{log.PostedAt}, {log.LogLevel}] {string.Format("{0,-15}",log.From)} : {log.Message} ");
+                    Console.WriteLine($"[{log.PostedAt}, {log.LogLevel}] {string.Format("{0,-15}", log.From)} : {log.Message} ");
                 }
             };
 
@@ -45,23 +45,24 @@ namespace FastMaths
             #region Globals
             var result = InitGlobals();
 
-            if ( result.HasErrors )
+            if ( result.HasErrors ) {
+
                 Console.WriteLine("Des erreurs sont survenues :\n");
-            else
-                Console.WriteLine("Aucune erreur a déplorer !\n");
 
-            for ( int i = 0; i < result.Errors.Count; i++ ) {
-                PrintError(result.Errors[i], i + 1);
+                for ( int i = 0; i < result.Errors.Count; i++ ) {
+                    Util.PrintError(result.Errors[i], i + 1);
+                }
+            }
+            else {
+
+                Console.WriteLine("Additions chargés avec succès :\n");
+
+                for ( int i = 0; i < result.Value.Count; i++ ) {
+                    Console.WriteLine($"{i + 1:D2} - {result.Value[i]}");
+                }
             }
 
-            Console.WriteLine("Additions chargés avec succès :\n");
 
-            for ( int i = 0; i < result.Value.Count; i++ ) {
-                Console.WriteLine($"{i + 1:D2} - {result.Value[i]}");
-            }
-
-
-            Separate();
             #endregion
 
             while ( true ) {
@@ -74,9 +75,6 @@ namespace FastMaths
                 else {
                     ParseMaths(command);
                 }
-
-                Separate();
-
             }
         }
 
@@ -108,7 +106,13 @@ namespace FastMaths
                         Console.WriteLine("Cette fonction n'est pas encore disponible.");
                         break;
                     case "define":
-                        CommandManager.Define(args);
+                        var loader = CommandManager.Define(args);
+                        if(!(loader is null) ) {
+                            var result = injector.Load(loader);
+                            if ( result.HasErrors ) {
+                                Util.PrintErrors(result.Errors);
+                            }
+                        }
                         break;
                     case "debug":
                         debug = !debug;
@@ -126,36 +130,12 @@ namespace FastMaths
             var result = compiler.Evaluate(command, new ExecutionContext(global));
 
             if ( result.HasErrors ) {
-
-                for ( int i = 0; i < result.Errors.Count; i++ ) {
-
-                    Error error = result.Errors[i];
-
-                    if ( i != 0 )
-                        Console.WriteLine("\n" + prompt + command);
-
-                    Console.ForegroundColor = ConsoleColor.White;
-                    for ( int x = 1; x < error.Position - 1 + prompt.Length; x++ ) {
-                        Console.Write('~');
-                    }
-                    Console.WriteLine("^\n");
-                    Console.ResetColor();
-
-
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    //Console.WriteLine($"Erreur n°{i + 1} : {error.Message} [{error.Source}].");
-                    PrintError(error, i + 1);
-                    Console.ResetColor();
-
-                }
-
+                Util.PrintErrors(command, result.Errors);
             }
             else {
                 Console.ForegroundColor = ConsoleColor.Green;
-
                 Console.WriteLine("Resultat : " + result.Value.ToString(CultureInfo.CurrentCulture));
                 Console.ResetColor();
-
             }
 
         }
@@ -175,7 +155,7 @@ namespace FastMaths
 
             result.Merge(mathsClassLoad, (r, list) => list.Concat(r).ToList());
 
-            var exprLoad = injector.Load(new ExpressionLoader(new Compiler().Compile("a+b*2").Value, "test", "b", "a"));
+            var exprLoad = injector.Load(new ExpressionLoader(new Compiler().Compile("a+b*2").Value, "test", new List<string>() { "b", "a" }));
 
             result.MergeIf(exprLoad, (r, list) => list.AddRange(r));
 
@@ -188,26 +168,6 @@ namespace FastMaths
 
         public static void Greetings ( ) => Console.WriteLine($"Bienvenue dans {Assembly.GetExecutingAssembly().GetName().Name} v{Assembly.GetExecutingAssembly().GetName().Version} (API-version {typeof(Compiler).Assembly.GetName().Version}) !\n");
 
-        private static void Separate ( )
-        {
-            StringBuilder bl = new StringBuilder();
-            Console.WriteLine();
 
-            for ( int i = 0; i < Console.BufferWidth - 1; i++ ) {
-                bl.Append('-');
-            }
-
-            Console.WriteLine(bl.ToString());
-            Console.WriteLine();
-
-            bl.Clear();
-        }
-
-        public static void PrintError (Error error, int index)
-        {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"Erreur n°{index} : {error}.");
-            Console.ResetColor();
-        }
     }
 }

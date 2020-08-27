@@ -116,15 +116,15 @@ namespace MathParser.Tokenisation
 
         private bool ScanIdentifier ( )
         {
-            if ( !char.IsLetter(currentChar) && currentChar != '_' )
-                return false;
-
             StringBuilder builder = new StringBuilder();
 
             while ( char.IsLetter(currentChar) || currentChar == '_' ) {
                 builder.Append(currentChar);
                 NextChar();
             }//while close
+
+            if ( builder.Length == 0 )
+                return false;
 
             identifier = builder.ToString();
             currentToken = Token.Identifier;

@@ -57,6 +57,7 @@ namespace MathParser.Logging
             string name;
             if ( !branchesName.TryPeek(out name) )
                 name = "none";
+            return name;
         }
 
         private string Format(string message)

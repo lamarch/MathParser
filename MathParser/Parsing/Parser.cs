@@ -197,14 +197,15 @@ namespace MathParser.Parsing
 
                 symStream.Next();
 
-                logger.Info("parse leaf");
                 var rhs = ParseUnary();
 
                 return new Unary(GetSymbolPosition(), OP_neg, rhs);
             }
 
+            logger.Info("parse leaf");
+            var leaf = ParseLeaf();
             logger.CloseBranch();
-            return ParseLeaf();
+            return leaf;
         }
 
         //

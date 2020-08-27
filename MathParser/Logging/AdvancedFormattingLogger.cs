@@ -24,15 +24,16 @@ namespace MathParser.Logging
         {
             branchesName.Push(name);
             branchCount++;
-            Info("BEGIN");
+
+            //logger.Info(GetName(), new string('-', 2 * branchCount));
         }
 
         public void CloseBranch ( )
         {
+            //logger.Info(GetName(), new string('-', 2 * branchCount));
             if ( branchesName.Count > 0 )
                 branchesName.Pop();
             branchCount--;
-            Info("END");
         }
 
         public void Info(string message)
@@ -57,13 +58,13 @@ namespace MathParser.Logging
             string name;
             if ( !branchesName.TryPeek(out name) )
                 name = "none";
-            return name;
+            return id+"::"+ name;
         }
 
         private string Format(string message)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append('\t', branchCount);
+            sb.Append(' ', branchCount * 2);
             sb.Append(message);
             return sb.ToString();
         }

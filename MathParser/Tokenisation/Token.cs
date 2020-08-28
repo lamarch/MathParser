@@ -11,7 +11,11 @@
         Star,
         Percent,
         Slash,
-        //Exp,
+        And,
+        Or,
+
+        Exp,
+        Exclamation,
 
         Comma,
         AntiSlash,

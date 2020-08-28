@@ -136,7 +136,7 @@ namespace UnitTest
         public void ParseExp ( )
         {
 
-            var r = Eval("p((-8),-2)*3");
+            var r = Eval("(-8)^-2*3");
             Assert.IsTrue(r.Errors.Count == 0);
 
             Assert.AreEqual(Math.Pow(-8,-2)*3, r.Value);

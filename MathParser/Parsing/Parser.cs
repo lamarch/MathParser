@@ -4,8 +4,13 @@ using System.Collections.Generic;
 using MathParser.Logging;
 using MathParser.Parsing.Nodes;
 
+
+
 namespace MathParser.Parsing
 {
+    using UnaryOP = System.Func<double, double>;
+    using BinaryOP = System.Func<double, double, double>;
+
     public class Parser
     {
         private SymbolStream symStream;
@@ -22,8 +27,23 @@ namespace MathParser.Parsing
 
         /*
          * the logging system use 'branches' for hierarchy
+         */
+
+
+        /*
+         * NOTES ABOUT OPERATOR PRECEDENCE & ASSOCIATIVITY :
          * 
+         * --> PRECEDENCE (functions order) :
+         * + -
+         * * / %
+         * + - [as unary]
+         * %
+         * number, identifiers and parentheses
          * 
+         * --> ASSOCIATIVITY (parsing by loop or by recursion) :
+         * 
+         * + - * / % are left-associative operators
+         * ^ is right-associative operator
          * 
          */
 
@@ -51,16 +71,20 @@ namespace MathParser.Parsing
         //
         // lower priority
         //
-
+        // call parse factors then
+        //
         private Expression ParseTerms ( )
         {
-            logger.OpenBranch("terms");
+            Func<Expression> lowerOPLevel = ParseFactors;
 
+
+            logger.OpenBranch("terms");
             logger.Info("parse lhs");
-            var lhs = ParseFactors();
+
+            var lhs = lowerOPLevel();
 
             while ( true ) {
-                Func<double, double, double> op = null;
+                BinaryOP op = null;
 
                 //
                 // +
@@ -88,7 +112,7 @@ namespace MathParser.Parsing
                 symStream.Next();
 
                 logger.Info("parse rhs");
-                var rhs = ParseFactors();
+                var rhs = lowerOPLevel();
 
                 logger.Info("asm lhs");
                 lhs = new Binary(GetSymbolPosition(), op, lhs, rhs);
@@ -102,16 +126,20 @@ namespace MathParser.Parsing
         //
         // medium priority
         //
-
+        // call parse unary then
+        //
         private Expression ParseFactors ( )
         {
-            logger.OpenBranch("factors");
+            Func<Expression> lowerOPLevel = ParseUnary;
 
+
+            logger.OpenBranch("factors");
             logger.Info("parse lhs");
-            var lhs = ParseUnary();
+
+            var lhs = lowerOPLevel();
 
             while ( true ) {
-                Func<double, double, double> op = null;
+                BinaryOP op = null;
 
                 //
                 // *
@@ -158,7 +186,7 @@ namespace MathParser.Parsing
                 symStream.Next();
 
                 logger.Info("parse rhs");
-                var rhs = ParseUnary();
+                var rhs = lowerOPLevel();
 
                 logger.Info("asm lhs");
                 lhs = new Binary(GetSymbolPosition(), op, lhs, rhs);
@@ -173,9 +201,14 @@ namespace MathParser.Parsing
         //
         // high priority
         //
+        // call parse leaf then
+        //
 
         private Expression ParseUnary ( )
         {
+            Func<Expression> lowerOPLevel = ParsePow;
+
+
             logger.OpenBranch("unary");
 
             //
@@ -203,20 +236,62 @@ namespace MathParser.Parsing
             }
 
             logger.Info("parse leaf");
-            var leaf = ParseLeaf();
+            var leaf = lowerOPLevel();
+
             logger.CloseBranch();
             return leaf;
         }
 
+        #region pow in construct
+
         //
         // level 4
+        //
+        // ^ operator
+        //
+        // --> right associative (recursion instead of loop)
+        //
+        // very high priority
+        //
+        // call parse leaf then
+        //
+        private Expression ParsePow ( )
+        {
+            Func<Expression> lowerOPLevel = ParseLeaf;
+
+            logger.OpenBranch("pow");
+            logger.Info("parse lhs");
+
+            var lhs = lowerOPLevel();
+
+            //
+            // ^
+            //
+            if ( IsTypeOf(Token.Exp) ) {
+
+                symStream.Next();
+
+                logger.Info("parse rhs (recursion)");
+
+                var rhs = ParseUnary();
+
+                logger.CloseBranch();
+
+                return new Binary(symStream.Current.Position, OP_pow, lhs, rhs);
+            }
+
+            return lhs;
+        }
+
+        #endregion
+
+        //
+        // level 4.5
         //
         // act as values
         //
         // higher priority
         //
-
-        //TODO : add power operator (but how ?)
 
         private Expression ParseLeaf ( )
         {
@@ -314,16 +389,18 @@ namespace MathParser.Parsing
         private int GetSymbolPosition ( ) => symStream.Current.Position + (symStream.Current.Token == Token.EOF ? 1 : 0);
 
         //plus
-        private static readonly Func<double, double, double> OP_add = (left, right) => left + right;
+        private static readonly BinaryOP OP_add = (left, right) => left + right;
         //minus
-        private static readonly Func<double, double, double> OP_sub = (left, right) => left - right;
+        private static readonly BinaryOP OP_sub = (left, right) => left - right;
         //multiplication
-        private static readonly Func<double, double, double> OP_mul = (left, right) => left * right;
+        private static readonly BinaryOP OP_mul = (left, right) => left * right;
         //division
-        private static readonly Func<double, double, double> OP_div = (left, right) => left / right;
+        private static readonly BinaryOP OP_div = (left, right) => left / right;
         //modulo
-        private static readonly Func<double, double, double> OP_mod = (left, right) => left % right;
+        private static readonly BinaryOP OP_mod = (left, right) => left % right;
+        //power
+        private static readonly BinaryOP OP_pow = (left, right) => Math.Pow(left, right);
         //negation
-        private static readonly Func<double, double> OP_neg = (right) => -right;
+        private static readonly UnaryOP OP_neg = (right) => -right;
     }
 }

@@ -160,7 +160,6 @@ namespace MathParser.Tokenisation
                     currentToken = Token.Percent;
                     NextChar();
                     return true;
-
                 case '(':
                     currentToken = Token.LPar;
                     NextChar();
@@ -176,11 +175,10 @@ namespace MathParser.Tokenisation
                     NextChar();
                     return true;
 
-                /*                case '^':
-                                    this.currentToken = Token.Exp;
-                                    NextChar();
-                                    return true;*/
-
+                case '^':
+                    this.currentToken = Token.Exp;
+                    NextChar();
+                    return true;
                 default:
                     return false;
             }

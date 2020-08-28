@@ -5,13 +5,10 @@ namespace MathParser.Tokenisation
 {
     public class Lexer
     {
-        public Lexer ( )
+        //TODO : bring together Lexer and SymbolStream
+        public Result<Queue<Symbol>> Lex (string code)
         {
-        }
-
-        public Result<List<Symbol>> Lex (string code)
-        {
-            List<Symbol> symbols = new List<Symbol>();
+            Queue<Symbol> symbols = new Queue<Symbol>();
             List<Error> errors = new List<Error>();
             Tokenisator stream = new Tokenisator(new StringReader(code));
             Token tok = Token.Null;
@@ -24,7 +21,7 @@ namespace MathParser.Tokenisation
 
                     tok = stream.CurrentToken;
 
-                    symbols.Add(GetSymbolFromToken(stream));
+                    symbols.Enqueue(GetSymbolFromToken(stream));
                 }
                 catch ( LexerException ) {
                     errors.Add(ErrorCodes.UNKNOWN_CHAR(stream.CurrentPosition));
@@ -32,7 +29,7 @@ namespace MathParser.Tokenisation
 
             }
 
-            return new Result<List<Symbol>>(symbols, errors);
+            return new Result<Queue<Symbol>>(symbols, errors);
         }
 
         public Symbol GetSymbolFromToken (Tokenisator stream) => new Symbol(stream.CurrentToken, stream.Value, stream.Identifier, stream.CurrentPosition);

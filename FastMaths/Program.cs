@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 
 using MathParser;
 using MathParser.Addons;
@@ -11,6 +12,7 @@ using MathParser.Execution.Injection;
 using MathParser.Execution.Injection.CSharp;
 using MathParser.Execution.Injection.Expressions;
 using MathParser.Execution.Injection.Python;
+using MathParser.Parsing.Nodes;
 
 namespace FastMaths
 {
@@ -27,15 +29,6 @@ namespace FastMaths
 
         private static void Main ( )
         {
-            compiler.LogReceiver.OnLog += log => {
-                if ( debug ) {
-                    var pre = Console.ForegroundColor;
-                    Console.ForegroundColor = ConsoleColor.Magenta;
-
-                    Console.WriteLine($"[{log.PostedAt}, {log.LogLevel}] {string.Format("{0,-15}", log.From)} : {log.Message} ");
-                }
-            };
-
             Greetings();
 
             Console.WriteLine("Chargement des données...\n");
@@ -117,7 +110,7 @@ namespace FastMaths
                     case "debug":
                         debug = !debug;
                         Console.WriteLine("Debug : " + debug);
-                        break;
+                        break;                        
                     default:
                         Console.WriteLine("Command inconnue.");
                         break;
@@ -127,17 +120,41 @@ namespace FastMaths
 
         private static void ParseMaths (string command)
         {
-            var result = compiler.Evaluate(command, new ExecutionContext(global));
+            /*            var result = compiler.Evaluate(command, new ExecutionContext(global));
 
-            if ( result.HasErrors ) {
-                Util.PrintErrors(command, result.Errors);
-            }
-            else {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Resultat : " + result.Value.ToString(CultureInfo.CurrentCulture));
-                Console.ResetColor();
+                        if ( result.HasErrors ) {
+                            Util.PrintErrors(command, result.Errors);
+                        }
+                        else {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("Resultat : " + result.Value.ToString(CultureInfo.CurrentCulture));
+                            Console.ResetColor();
+                        }*/
+
+
+            var res = compiler.Compile(command);
+
+            Show(res.Value, 0);
+        }
+
+        private static void Show (Expression value, int level)
+        {
+            var sb = new StringBuilder();
+
+            for ( int i = 0; i < level; i++ ) {
+                sb.Append('\t');
             }
 
+            sb.Append(value.ToString());
+
+            Console.WriteLine(sb.ToString());
+
+            if ( value.GetChilds() is null )
+                return;
+
+            foreach ( var child in value.GetChilds() ) {
+                Show(child, level + 1);
+            }
         }
 
         private static Result<List<Callable>> InitGlobals ( )

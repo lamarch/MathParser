@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+
+using IronPython.Compiler.Ast;
 
 using MathParser.Execution;
 
@@ -31,5 +34,8 @@ namespace MathParser.Parsing.Nodes
 
             return op(lhs_result.Value, rhs_result.Value);
         }
+
+        public override List<Expression> GetChilds ( ) => new List<Expression>() { lhs, rhs };
+        public override string ToString ( ) => op.Method.Name;
     }
 }

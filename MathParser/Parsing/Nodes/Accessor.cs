@@ -1,4 +1,6 @@
-﻿using MathParser.Execution;
+﻿using System.Collections.Generic;
+
+using MathParser.Execution;
 
 namespace MathParser.Parsing.Nodes
 {
@@ -12,7 +14,7 @@ namespace MathParser.Parsing.Nodes
         }
 
         public override Result<double> Eval (IContext ctx) => ctx.ResolveProp(id).SetErrorsPosition(Position);
-
-
+        public override List<Expression> GetChilds ( ) => null;
+        public override string ToString ( ) => id;
     }
 }

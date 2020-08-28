@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using MathParser.Execution;
 
@@ -23,5 +24,8 @@ namespace MathParser.Parsing.Nodes
                 return leafResult.SetErrorsPosition(Position);
             return op(leafResult.Value);
         }
+
+        public override List<Expression> GetChilds ( ) => new List<Expression>() { leaf };
+        public override string ToString ( ) => op.Method.Name;
     }
 }

@@ -14,10 +14,10 @@ namespace UnitTest
     using MathParser.Utilities;
 
     [TestClass]
-    public class ParserTests
+    public class EvaluationTests
     {
 
-        static ParserTests ( )
+        static EvaluationTests ( )
         {
             InitGlobals();
         }

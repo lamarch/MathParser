@@ -25,5 +25,8 @@ namespace MathParser.Parsing.Nodes
             }
             return ctx.ResolveFunction(id, values.Select(r => r.Value).ToList()).SetErrorsPosition(Position);
         }
+
+        public override List<Expression> GetChilds ( ) => args;
+        public override string ToString ( ) => id;
     }
 }

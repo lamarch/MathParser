@@ -1,4 +1,8 @@
-﻿using MathParser.Execution;
+﻿using System.Collections.Generic;
+
+using IronPython.Runtime;
+
+using MathParser.Execution;
 
 namespace MathParser.Parsing.Nodes
 {
@@ -12,5 +16,8 @@ namespace MathParser.Parsing.Nodes
         }
 
         public abstract Result<double> Eval (IContext ctx);
+
+        public abstract override string ToString ( );
+        public abstract List<Expression> GetChilds ( );
     }
 }

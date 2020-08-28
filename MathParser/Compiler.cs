@@ -1,4 +1,6 @@
 ﻿
+using System.IO;
+
 using MathParser.Execution;
 using MathParser.Logging;
 using MathParser.Parsing;
@@ -11,16 +13,13 @@ namespace MathParser
     {
         private readonly Parser parser;
         private readonly Lexer lexer;
-        private readonly Logger logger;
-        public LogReceiver LogReceiver { get; private set; }
+
 
         public Compiler ( )
         {
-            logger = new Logger();
-            parser = new Parser(logger);
+            parser = new Parser();
             lexer = new Lexer();
 
-            LogReceiver = new LogReceiver(logger);
         }
 
 
@@ -33,7 +32,7 @@ namespace MathParser
                 return new Result<Expression>(null, lexResult.Errors);
             }
 
-
+            
             var parseResult = parser.Parse(new SymbolStream(lexResult.Value));
 
             return parseResult;

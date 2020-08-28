@@ -8,7 +8,7 @@ namespace MathParser
         public Result (T value, List<Error> error)
         {
             Value = value;
-            Errors = error;
+            Errors = error ?? new List<Error>();
         }
 
         public Result (T value, Error e) : this(value, new List<Error> { e }) { }

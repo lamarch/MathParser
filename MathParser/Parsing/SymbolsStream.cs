@@ -8,10 +8,11 @@ namespace MathParser.Parsing
     {
         private readonly Queue<Symbol> symbols;
         private int stuffAmount = 0;
-        private Symbol EOFSymbol = null;
-        public SymbolStream (List<Symbol> symbols)
+        private Symbol EOFSymbol = new Symbol(Token.Null, -1, string.Empty, -1);
+
+        public SymbolStream (Queue<Symbol> symbols)
         {
-            this.symbols = new Queue<Symbol>(symbols);
+            this.symbols = symbols;
         }
 
         public Symbol Current {
@@ -32,18 +33,14 @@ namespace MathParser.Parsing
             }
         }
 
-        public Symbol Next ( )
+        public void Next ( )
         {
             if ( stuffAmount < 1 ) {
-                if ( symbols.Count > 0 )
-                    return symbols.Dequeue();
-                else
-                    return Current;
+                symbols.Dequeue();
             }
             //somebody stuff the queue
             else {
                 stuffAmount--;
-                return Current;
             }
 
         }

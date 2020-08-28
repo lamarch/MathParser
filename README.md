@@ -36,7 +36,6 @@ if(result.HasErrors){
 	* Properties :
 		* `C# native`
 		* `Expression-based`
-		* *soon* : `Python`
 
 	* Functions : 
 		* `C# native`
@@ -45,6 +44,5 @@ if(result.HasErrors){
 
 ## Incoming features :
 
-* Properties :
-	* `Python`
+*no more ideas for the moment...*
 

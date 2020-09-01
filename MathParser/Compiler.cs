@@ -6,34 +6,29 @@ using MathParser.Logging;
 using MathParser.Parsing;
 using MathParser.Parsing.Nodes;
 using MathParser.Tokenisation;
+using MathParser.Tokenisation.Unused;
 
 namespace MathParser
 {
     public class Compiler
     {
         private readonly Parser parser;
-        private readonly Lexer lexer;
+        private readonly NewLexer lexer;
 
 
         public Compiler ( )
         {
             parser = new Parser();
-            lexer = new Lexer();
-
+            lexer = new NewLexer();
         }
 
 
         public Result<Expression> Compile (string code)
         {
 
-            var lexResult = lexer.Lex(code);
-
-            if ( lexResult.Errors.Count > 0 ) {
-                return new Result<Expression>(null, lexResult.Errors);
-            }
-
+            lexer.Lex(new StringReader(code));
             
-            var parseResult = parser.Parse(new SymbolStream(lexResult.Value));
+            var parseResult = parser.Parse(lexer);
 
             return parseResult;
         }

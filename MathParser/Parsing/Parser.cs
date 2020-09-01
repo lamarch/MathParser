@@ -7,10 +7,11 @@ namespace MathParser.Parsing
     using MathParser.Parsing.Nodes;
     using MathParser.Parsing.Nodes.BinaryNodes;
     using MathParser.Parsing.Nodes.UnaryNodes;
+    using MathParser.Tokenisation.Unused;
 
     public class Parser
     {
-        private SymbolStream symStream;
+        private NewLexer lexer;
 
         private readonly List<Error> errors = new List<Error>();
 
@@ -38,11 +39,11 @@ namespace MathParser.Parsing
          * 
          */
 
-        public Result<Expression> Parse (SymbolStream stream)
+        public Result<Expression> Parse (NewLexer lexer)
         {
             errors.Clear();
 
-            symStream = stream;
+            this.lexer = lexer;
 
             var final = ParseTerms();
 
@@ -71,11 +72,11 @@ namespace MathParser.Parsing
 
                 Token sign;
 
-                switch ( symStream.Current.Token ) {
+                switch ( lexer.Current.Token ) {
                     case Token.Plus:
                     case Token.Minus:
-                        sign = symStream.Current.Token;
-                        symStream.Next();
+                        sign = lexer.Current.Token;
+                        lexer.Next();
                         rhs_ = ParseFactors();
                         break;
                     default:
@@ -85,8 +86,8 @@ namespace MathParser.Parsing
 
                 lhs = sign switch
                 {
-                    Token.Plus => new Add(symStream.Current.Position, lhs, rhs_),
-                    Token.Minus => new Sub(symStream.Current.Position, lhs, rhs_),
+                    Token.Plus => new Add(lexer.Current.Position, lhs, rhs_),
+                    Token.Minus => new Sub(lexer.Current.Position, lhs, rhs_),
                     _ => null,
                 };
 
@@ -112,12 +113,12 @@ namespace MathParser.Parsing
 
                 Token sign;
 
-                switch ( symStream.Current.Token ) {
+                switch ( lexer.Current.Token ) {
                     case Token.Star:
                     case Token.Slash:
                     case Token.Percent:
-                        sign = symStream.Current.Token;
-                        symStream.Next();
+                        sign = lexer.Current.Token;
+                        lexer.Next();
                     Next:
                         rhs_ = ParseUnary();
                         break;
@@ -152,12 +153,12 @@ namespace MathParser.Parsing
 
         private Expression ParseUnary ( )
         {
-            switch ( symStream.Current.Token ) {
+            switch ( lexer.Current.Token ) {
                 case Token.Plus:
-                    symStream.Next();
+                    lexer.Next();
                     return ParseUnary();
                 case Token.Minus:
-                    symStream.Next();
+                    lexer.Next();
                     //recursion
                     return new Neg(GetSymbolPosition(), ParseUnary());
                 default:
@@ -188,7 +189,7 @@ namespace MathParser.Parsing
             //
             if ( IsTypeOf(Token.Exp) ) {
 
-                symStream.Next();
+                lexer.Next();
 
 
                 var rhs = ParseUnary();
@@ -215,17 +216,17 @@ namespace MathParser.Parsing
 
             //It's a number
             if ( IsTypeOf(Token.Number) ) {
-                double v = symStream.Current.Value;
-                symStream.Next();
+                double v = lexer.Current.Value;
+                lexer.Next();
 
 
                 return new Const(GetSymbolPosition(), v);
             }
             //It's a name/identifier (function or property)
             else if ( IsTypeOf(Token.Identifier) ) {
-                string id = symStream.Current.Id;
+                string id = lexer.Current.Id;
                 int position = GetSymbolPosition();
-                symStream.Next();
+                lexer.Next();
 
                 //That's a function call
                 if ( IsTypeOf(Token.LPar) ) {
@@ -233,8 +234,8 @@ namespace MathParser.Parsing
                     List<Expression> args = new List<Expression>();
 
                     do {
-                        symStream.Next();
-                        if ( symStream.Current.Token == Token.RPar )
+                        lexer.Next();
+                        if ( lexer.Current.Token == Token.RPar )
                             break;
                         args.Add(ParseTerms());
 
@@ -256,7 +257,7 @@ namespace MathParser.Parsing
             }
             //Parentheses detected
             else if ( IsTypeOf(Token.LPar) ) {
-                symStream.Next();
+                lexer.Next();
 
 
 
@@ -279,7 +280,7 @@ namespace MathParser.Parsing
          *  Helper functions
          */
 
-        private bool IsTypeOf (Token type) => symStream.Current.Token == type;
+        private bool IsTypeOf (Token type) => lexer.Current.Token == type;
 
 
         /// <summary>
@@ -288,12 +289,12 @@ namespace MathParser.Parsing
         private void Expect (Token type)
         {
             if ( !IsTypeOf(type) )
-                errors.Add(ErrorCodes.TOKEN_EXPECTED("Parser.Expect", type, symStream.Current.Token, GetSymbolPosition()));
-            symStream.Next();
+                errors.Add(ErrorCodes.TOKEN_EXPECTED("Parser.Expect", type, lexer.Current.Token, GetSymbolPosition()));
+            lexer.Next();
         }
 
         //avoid some problemes with EOF token
-        private int GetSymbolPosition ( ) => symStream.Current.Position + (symStream.Current.Token == Token.EOF ? 1 : 0);
+        private int GetSymbolPosition ( ) => lexer.Current.Position + (lexer.Current.Token == Token.EOF ? 1 : 0);
 
     }
 }

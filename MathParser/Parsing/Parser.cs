@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-
-using MathParser.Logging;
-using MathParser.Parsing.Nodes;
-using MathParser.Tokenisation;
+﻿
 
 namespace MathParser.Parsing
 {
-    using UnaryOP = System.Func<double, double>;
-    using BinaryOP = System.Func<double, double, double>;
+    using System.Collections.Generic;
+
+    using MathParser.Parsing.Nodes;
+    using MathParser.Parsing.Nodes.BinaryNodes;
+    using MathParser.Parsing.Nodes.UnaryNodes;
 
     public class Parser
     {
@@ -69,33 +67,29 @@ namespace MathParser.Parsing
             var lhs = ParseFactors();
 
             while ( true ) {
-                BinaryOP op = null;
+                Expression rhs_;
 
-                //
-                // +
-                //
-                if ( IsTypeOf(Token.Plus) ) {
-                    op = OP_add;
+                Token sign;
+
+                switch ( symStream.Current.Token ) {
+                    case Token.Plus:
+                    case Token.Minus:
+                        sign = symStream.Current.Token;
+                        symStream.Next();
+                        rhs_ = ParseFactors();
+                        break;
+                    default:
+                        return lhs;
 
                 }
-                //
-                // -
-                //
-                else if ( IsTypeOf(Token.Minus) ) {
-                    op = OP_sub;
-                }
 
-                if ( op == null ) {
-                    //Exit point
+                lhs = sign switch
+                {
+                    Token.Plus => new Add(symStream.Current.Position, lhs, rhs_),
+                    Token.Minus => new Sub(symStream.Current.Position, lhs, rhs_),
+                    _ => null,
+                };
 
-                    return lhs;
-                }
-
-                symStream.Next();
-
-                var rhs = ParseFactors();
-
-                lhs = new Binary(GetSymbolPosition(), op, lhs, rhs);
             }
         }
 
@@ -111,53 +105,37 @@ namespace MathParser.Parsing
         private Expression ParseFactors ( )
         {
 
-            var lhs = ParseUnary();
+            Expression lhs = ParseUnary();
 
             while ( true ) {
-                BinaryOP op = null;
+                Expression rhs_;
 
-                //
-                // *
-                //
-                if ( IsTypeOf(Token.Star) ) {
-                    op = OP_mul;
+                Token sign;
 
-                }
-                //When parenthesis follow a factor, that's an implicit *
-                else if ( IsTypeOf(Token.LPar) ) {
-                    op = OP_mul;
-
-                    //stuff stream to keep LPar
-                    symStream.Stuff(1);
-
-
-                }
-                //
-                // /
-                //
-                else if ( IsTypeOf(Token.Slash) ) {
-                    op = OP_div;
-
-                }
-                //
-                // %
-                //
-                else if ( IsTypeOf(Token.Percent) ) {
-                    op = OP_mod;
+                switch ( symStream.Current.Token ) {
+                    case Token.Star:
+                    case Token.Slash:
+                    case Token.Percent:
+                        sign = symStream.Current.Token;
+                        symStream.Next();
+                    Next:
+                        rhs_ = ParseUnary();
+                        break;
+                    case Token.LPar:
+                        sign = Token.Star;
+                        goto Next;
+                    default:
+                        return lhs;
 
                 }
 
-                if ( op == null ) {
-                    //exit point
-
-                    return lhs;
-                }
-
-                symStream.Next();
-
-                var rhs = ParseUnary();
-
-                lhs = new Binary(GetSymbolPosition(), op, lhs, rhs);
+                lhs = sign switch
+                {
+                    Token.Star => new Mul(GetSymbolPosition(), lhs, rhs_),
+                    Token.Slash => new Div(GetSymbolPosition(), lhs, rhs_),
+                    Token.Percent => new Mod(GetSymbolPosition(), lhs, rhs_),
+                    _ => null,
+                };
 
             }
         }
@@ -174,36 +152,19 @@ namespace MathParser.Parsing
 
         private Expression ParseUnary ( )
         {
-
-
-            //
-            // +
-            //
-            if ( IsTypeOf(Token.Plus) ) {
-
-                //Unary plus does nothing
-                symStream.Next();
-
-                return ParseUnary();
+            switch ( symStream.Current.Token ) {
+                case Token.Plus:
+                    symStream.Next();
+                    return ParseUnary();
+                case Token.Minus:
+                    symStream.Next();
+                    //recursion
+                    return new Neg(GetSymbolPosition(), ParseUnary());
+                default:
+                    return ParsePow();
             }
-            //
-            // -
-            //
-            else if ( IsTypeOf(Token.Minus) ) {
-
-                symStream.Next();
-
-                var rhs = ParseUnary();
-
-                return new Unary(GetSymbolPosition(), OP_neg, rhs);
-            }
-
-            var leaf = ParsePow();
-
-            return leaf;
         }
 
-        #region pow in construct
 
         //
         // level 4
@@ -233,13 +194,12 @@ namespace MathParser.Parsing
                 var rhs = ParseUnary();
 
 
-                return new Binary(symStream.Current.Position, OP_pow, lhs, rhs);
+                return new Pow(GetSymbolPosition(), lhs, rhs);
             }
 
             return lhs;
         }
 
-        #endregion
 
         //
         // level 4.5
@@ -321,6 +281,7 @@ namespace MathParser.Parsing
 
         private bool IsTypeOf (Token type) => symStream.Current.Token == type;
 
+
         /// <summary>
         /// Loop if the given type is the current type, and otherwise create an error
         /// </summary>
@@ -334,19 +295,5 @@ namespace MathParser.Parsing
         //avoid some problemes with EOF token
         private int GetSymbolPosition ( ) => symStream.Current.Position + (symStream.Current.Token == Token.EOF ? 1 : 0);
 
-        //plus
-        private static readonly BinaryOP OP_add = (left, right) => left + right;
-        //minus
-        private static readonly BinaryOP OP_sub = (left, right) => left - right;
-        //multiplication
-        private static readonly BinaryOP OP_mul = (left, right) => left * right;
-        //division
-        private static readonly BinaryOP OP_div = (left, right) => left / right;
-        //modulo
-        private static readonly BinaryOP OP_mod = (left, right) => left % right;
-        //power
-        private static readonly BinaryOP OP_pow = (left, right) => Math.Pow(left, right);
-        //negation
-        private static readonly UnaryOP OP_neg = (right) => -right;
     }
 }

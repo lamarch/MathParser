@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using MathParser.Execution;
 
-namespace MathParser.Parsing.Nodes
+namespace MathParser.Parsing.Nodes.UnaryNodes
 {
     public class Unary : Expression
     {

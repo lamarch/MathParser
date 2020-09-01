@@ -6,7 +6,7 @@ using IronPython.Compiler.Ast;
 
 using MathParser.Execution;
 
-namespace MathParser.Parsing.Nodes
+namespace MathParser.Parsing.Nodes.BinaryNodes
 {
     public class Binary : Expression
     {
@@ -36,6 +36,7 @@ namespace MathParser.Parsing.Nodes
         }
 
         public override List<Expression> GetChilds ( ) => new List<Expression>() { lhs, rhs };
-        public override string ToString ( ) => op.Method.Name;
+
+        public override string ToString ( ) => string.Empty;
     }
 }

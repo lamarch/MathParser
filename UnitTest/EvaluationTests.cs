@@ -10,6 +10,7 @@ namespace UnitTest
     using MathParser.Execution;
     using MathParser.Parsing;
     using MathParser.Parsing.Nodes;
+    using MathParser.Parsing.Nodes.BinaryNodes;
     using MathParser.Tokenisation;
     using MathParser.Utilities;
 
@@ -22,8 +23,8 @@ namespace UnitTest
             InitGlobals();
         }
 
-        private static Segment Global = new Segment();
-        private static Random random = new Random();
+        private static readonly Segment Global = new Segment();
+        private static readonly Random random = new Random();
 
         private static void InitGlobals ( )
         {

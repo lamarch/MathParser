@@ -120,21 +120,21 @@ namespace FastMaths
 
         private static void ParseMaths (string command)
         {
-            /*            var result = compiler.Evaluate(command, new ExecutionContext(global));
+            var result = compiler.Evaluate(command, new ExecutionContext(global));
 
-                        if ( result.HasErrors ) {
-                            Util.PrintErrors(command, result.Errors);
-                        }
-                        else {
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine("Resultat : " + result.Value.ToString(CultureInfo.CurrentCulture));
-                            Console.ResetColor();
-                        }*/
+            if ( result.HasErrors ) {
+                Util.PrintErrors(command, result.Errors);
+            }
+            else {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Resultat : " + result.Value.ToString(CultureInfo.CurrentCulture));
+                Console.ResetColor();
+            }
 
 
-            var res = compiler.Compile(command);
+            /*            var res = compiler.Compile(command);
 
-            Show(res.Value, 0);
+                        Show(res.Value, 0);*/
         }
 
         private static void Show (Expression value, int level)

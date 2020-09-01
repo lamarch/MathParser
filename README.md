@@ -21,15 +21,13 @@ if(result.HasErrors){
 
 - This parser support a contextual execution. You can add and remove functions and properties, from other parsed maths-expression, from `C# assemblies`, or from `Python` code. Of course, you can create your own *context* system to support `JavaScript` code or whatever you want. 
 
-- The execution engine uses a stack memory, to allow local variable (like parameters). When a *callable* (function or property) is defined, it's allocated on the global segment, available everywhere.
-
 ## Features :
 
-* Basic operators : `+ - * / %`
+* Basic operators : `+ - * / % ^`
 
 * Unary operators : `+ -`
 
-* Parenthesis
+* Parentheses
 
 * Implicit `*` operator before `(`
 
@@ -38,7 +36,6 @@ if(result.HasErrors){
 	* Properties :
 		* `C# native`
 		* `Expression-based`
-		* *soon* : `Python`
 
 	* Functions : 
 		* `C# native`
@@ -47,8 +44,5 @@ if(result.HasErrors){
 
 ## Incoming features :
 
-* Basic operator : `^`
-
-* Properties :
-	* `Python`
+*no more ideas for the moment...*
 

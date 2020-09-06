@@ -3,6 +3,7 @@
 namespace MathParser.Parsing
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     using MathParser.Parsing.Nodes;
     using MathParser.Parsing.Nodes.BinaryNodes;
@@ -50,7 +51,7 @@ namespace MathParser.Parsing
             Expect(Token.EOF);
 
 
-            return new Result<Expression>(final, errors);
+            return new Result<Expression>(final, errors.Concat(this.lexer.Errors).ToList());
         }
 
         //
@@ -270,7 +271,7 @@ namespace MathParser.Parsing
             }
 
 
-            errors.Add(ErrorCodes.VALUE_EXPECTED(GetSymbolPosition()));
+            errors.Add(ErrorCodes.VALUE_EXPECTED(GetSymbolPosition(), lexer.Current.Token));
 
 
             return new Const(GetSymbolPosition(), 0);

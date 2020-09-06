@@ -11,6 +11,7 @@ namespace MathParser.Tokenisation.Unused
         public void Lex (TextReader textReader)
         {
             reader = new Tokenisator(textReader);
+            Next();
         }
 
         public void Next ( )

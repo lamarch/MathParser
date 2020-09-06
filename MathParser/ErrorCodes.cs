@@ -212,9 +212,9 @@ namespace MathParser
 
 
         //Parser
-        public static Error VALUE_EXPECTED (int position, [CallerLineNumber] int l = -1, [CallerMemberName] string m = "unknown", [CallerFilePath] string fp = "unknown") => new Error(
+        public static Error VALUE_EXPECTED (int position, Token found, [CallerLineNumber] int l = -1, [CallerMemberName] string m = "unknown", [CallerFilePath] string fp = "unknown") => new Error(
             name: "Valeur attendue",
-            message: "Une valeur est attendue à cet endroit.",
+            message: $"Une valeur est attendue à la place de '{found}'.",
             source: "Parser.ParseLeaf",
             code: "0x1051",
             position: position,

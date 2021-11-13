@@ -16,11 +16,9 @@
             NextChar();
         }
 
-        public char CurrentChar { get; set; }
-        public Token CurrentToken { get; private set; }
         public int CurrentPosition { get; private set; }
-        public string Identifier {get; private set;}
-        public double Value { get; private set;}
+        public char CurrentChar { get; set; }
+
 
         private void NextChar ( )
         {
@@ -35,40 +33,33 @@
             }
         }
 
-        public void NextToken ( )
+        public Symbol NextToken ( )
         {
-            CurrentToken = Token.Error;
 
             //remove spaces
             while ( IsSpace(CurrentChar) ) { NextChar(); }
 
             if ( IsEOF() ) {
-                CurrentToken = Token.EOF;
-                return;
+                return Symbol.EOF(CurrentPosition);
             }
 
             if ( ScanIdentifier() is string identifier)
             {
-                CurrentToken = Token.Identifier;
-                Identifier = identifier;
-                return;
+                return Symbol.Identifier(identifier, CurrentPosition);
             }
 
             if ( ScanNumber() is double value)
             {
-                CurrentToken = Token.Number;
-                Value = value;
-                return;
+                return Symbol.Number(value, CurrentPosition);
             }
 
             if ( ScanSign() is Token t)
             {
-                CurrentToken = t;
-                return;
+                return Symbol.Sign(t, CurrentPosition);
             }
 
             NextChar();
-            throw new LexerException("Unknown token : " + CurrentChar);
+            return Symbol.Error(CurrentPosition);
         }
 
         private double? ScanNumber ( )

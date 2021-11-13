@@ -16,22 +16,15 @@ namespace MathParser.Tokenisation
 
         public void Next ( )
         {
-
-            try {
-                reader.NextToken();
-
-                Current = GetSymbolFromToken(reader);
-            }
-            catch ( LexerException ) {
-                Errors.Add(ErrorCodes.UNKNOWN_CHAR(reader.CurrentPosition));
+            Current = reader.NextToken();
+            if (Current.Token == Token.Error)
+            {
+                Errors.Add(ErrorCodes.UNKNOWN_CHAR(Current.Position));
             }
 
         }
 
         public List<Error> Errors { get; private set; } = new List<Error>();
         public Symbol Current { get; private set; }
-
-        private Symbol GetSymbolFromToken (Tokenisator stream) => new Symbol(stream.CurrentToken, stream.Value, stream.Identifier, stream.CurrentPosition);
-
     }
 }

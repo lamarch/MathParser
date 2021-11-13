@@ -8,7 +8,7 @@ namespace MathParser.Parsing
     {
         private readonly Queue<Symbol> symbols;
         private int stuffAmount = 0;
-        private Symbol EOFSymbol = new Symbol(Token.Null, -1, string.Empty, -1);
+        private Symbol EOFSymbol = Symbol.EOF(-1);
 
         public SymbolStream (Queue<Symbol> symbols)
         {

@@ -12,23 +12,16 @@ namespace MathParser
 {
     public class Compiler
     {
-        private readonly Parser parser;
-        private readonly Lexer lexer;
-
 
         public Compiler ( )
         {
-            parser = new Parser();
-            lexer = new Lexer();
         }
-
 
         public Result<Expression> Compile (string code)
         {
-
-            lexer.Lex(new StringReader(code));
+            Parser parser = new Parser(new Lexer(new StringReader(code)));
             
-            var parseResult = parser.Parse(lexer);
+            var parseResult = parser.Parse();
 
             return parseResult;
         }

@@ -14,13 +14,13 @@ namespace UnitTest
         [TestMethod]
         public void TestLexer ( )
         {
-            Tokenisator lex = new Tokenisator(new StringReader("a 12 12,3 45 -+*/+"));
+            Lexer lex = new Lexer(new StringReader("a 12 12,3 45 -+*/+"));
 
             Token tok = Token.EOF;
 
             do {
-                lex.NextToken();
-                tok = lex.CurrentToken;
+                lex.Next();
+                tok = lex.Current.Token;
             } while ( tok != Token.EOF );
         }
     }

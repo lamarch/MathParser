@@ -13,9 +13,14 @@ namespace MathParser.Parsing
 
     public class Parser
     {
-        private Lexer lexer;
+        private readonly Lexer lexer;
 
         private readonly List<Error> errors = new List<Error>();
+
+        public Parser(Lexer lexer)
+        {
+            this.lexer = lexer;
+        }
 
         //this parser work from left to right
 
@@ -41,16 +46,11 @@ namespace MathParser.Parsing
          * 
          */
 
-        public Result<Expression> Parse (Lexer lexer)
+        public Result<Expression> Parse ()
         {
-            errors.Clear();
-
-            this.lexer = lexer;
-
             var final = ParseTerms();
 
             Expect(Token.EOF);
-
 
             return new Result<Expression>(final, errors.Concat(this.lexer.Errors).ToList());
         }

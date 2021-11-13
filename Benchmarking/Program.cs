@@ -36,7 +36,7 @@ namespace Benchmarking
             sp.Start();
 
             for ( int i = 0; i < count; i++ ) {
-                Old();
+                //Old();
             }
 
             sp.Stop();
@@ -63,8 +63,7 @@ namespace Benchmarking
 
         private static void New ( )
         {
-            Lexer nl = new Lexer();
-            nl.Lex(new StringReader(final));
+            Lexer nl = new Lexer(new StringReader(final));
 
             Symbol s;
 
@@ -72,20 +71,6 @@ namespace Benchmarking
                 nl.Next();
                 s = nl.Current;
             } while ( s.Token != Token.EOF );
-        }
-
-        private static void Old ( )
-        {
-            OldLexer lex = new OldLexer();
-            SymbolStream sm = new SymbolStream(lex.Lex(final).Value);
-
-            Symbol s2;
-            do {
-                sm.Next();
-                s2 = sm.Current;
-            } while ( s2.Token != Token.EOF )
-                ;
-
         }
     }
 }

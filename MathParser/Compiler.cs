@@ -13,13 +13,13 @@ namespace MathParser
     public class Compiler
     {
         private readonly Parser parser;
-        private readonly NewLexer lexer;
+        private readonly Lexer lexer;
 
 
         public Compiler ( )
         {
             parser = new Parser();
-            lexer = new NewLexer();
+            lexer = new Lexer();
         }
 
 

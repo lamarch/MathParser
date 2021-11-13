@@ -1,37 +1,37 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 
 namespace MathParser.Tokenisation
 {
     public class Lexer
     {
-        //TODO : bring together Lexer and SymbolStream
-        public Result<Queue<Symbol>> Lex (string code)
+        private Tokenisator reader;
+
+        public void Lex (TextReader textReader)
         {
-            Queue<Symbol> symbols = new Queue<Symbol>();
-            List<Error> errors = new List<Error>();
-            Tokenisator stream = new Tokenisator(new StringReader(code));
-            Token tok = Token.Null;
-
-
-            while ( tok != Token.EOF ) {
-
-                try {
-                    stream.NextToken();
-
-                    tok = stream.CurrentToken;
-
-                    symbols.Enqueue(GetSymbolFromToken(stream));
-                }
-                catch ( LexerException ) {
-                    errors.Add(ErrorCodes.UNKNOWN_CHAR(stream.CurrentPosition));
-                }
-
-            }
-
-            return new Result<Queue<Symbol>>(symbols, errors);
+            reader = new Tokenisator(textReader);
+            Next();
         }
 
-        public Symbol GetSymbolFromToken (Tokenisator stream) => new Symbol(stream.CurrentToken, stream.Value, stream.Identifier, stream.CurrentPosition);
+        public void Next ( )
+        {
+
+            try {
+                reader.NextToken();
+
+                Current = GetSymbolFromToken(reader);
+            }
+            catch ( LexerException ) {
+                Errors.Add(ErrorCodes.UNKNOWN_CHAR(reader.CurrentPosition));
+            }
+
+        }
+
+        public List<Error> Errors { get; private set; } = new List<Error>();
+        public Symbol Current { get; private set; }
+
+        private Symbol GetSymbolFromToken (Tokenisator stream) => new Symbol(stream.CurrentToken, stream.Value, stream.Identifier, stream.CurrentPosition);
+
     }
 }

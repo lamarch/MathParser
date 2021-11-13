@@ -5,6 +5,7 @@
     <AssemblyVersion>1.2.1.0</AssemblyVersion>
     <Authors>polohx</Authors>
     <Company>LuapCore</Company>
+    <LangVersion>10</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

@@ -8,11 +8,12 @@ namespace MathParser.Parsing
     using MathParser.Parsing.Nodes;
     using MathParser.Parsing.Nodes.BinaryNodes;
     using MathParser.Parsing.Nodes.UnaryNodes;
-    using MathParser.Tokenisation.Unused;
+
+    using MathParser.Tokenisation;
 
     public class Parser
     {
-        private NewLexer lexer;
+        private Lexer lexer;
 
         private readonly List<Error> errors = new List<Error>();
 
@@ -40,7 +41,7 @@ namespace MathParser.Parsing
          * 
          */
 
-        public Result<Expression> Parse (NewLexer lexer)
+        public Result<Expression> Parse (Lexer lexer)
         {
             errors.Clear();
 

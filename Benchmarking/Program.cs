@@ -63,7 +63,7 @@ namespace Benchmarking
 
         private static void New ( )
         {
-            NewLexer nl = new NewLexer();
+            Lexer nl = new Lexer();
             nl.Lex(new StringReader(final));
 
             Symbol s;
@@ -76,7 +76,7 @@ namespace Benchmarking
 
         private static void Old ( )
         {
-            Lexer lex = new Lexer();
+            OldLexer lex = new OldLexer();
             SymbolStream sm = new SymbolStream(lex.Lex(final).Value);
 
             Symbol s2;

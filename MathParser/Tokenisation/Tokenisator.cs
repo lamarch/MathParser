@@ -1,22 +1,13 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MathParser.Tokenisation
+﻿namespace MathParser.Tokenisation
 {
+    using System;
+    using System.Globalization;
+    using System.IO;
+    using System.Text;
+
     public class Tokenisator
     {
         private readonly TextReader reader;
-
-        private char currentChar;
-        private bool nextCharNull = false;
-
-        private int currentPos;
-        private Token currentToken;
-        private string identifier;
-        private double value;
 
         public Tokenisator (TextReader reader)
         {
@@ -25,75 +16,80 @@ namespace MathParser.Tokenisation
             NextChar();
         }
 
-        public Token CurrentToken => currentToken;
-        public int CurrentPosition => currentPos;
-        public string Identifier => identifier;
-        public double Value => value;
+        public char CurrentChar { get; set; }
+        public Token CurrentToken { get; private set; }
+        public int CurrentPosition { get; private set; }
+        public string Identifier {get; private set;}
+        public double Value { get; private set;}
 
         private void NextChar ( )
         {
+            // TODO : optimisation : read by async buffer 
             int ch = reader.Read();
             if ( ch > 0 ) {
-                currentChar = (char)ch;
-                currentPos++;
+                CurrentChar = (char)ch;
+                CurrentPosition++;
             }
-            else {
-                if ( !nextCharNull ) {
-                    currentPos++;
-                    nextCharNull = true;
-                }
-                currentChar = '\0';
+            else if (CurrentChar != '\0') {
+                CurrentChar = '\0';
             }
         }
 
         public void NextToken ( )
         {
-            currentToken = Token.Error;
-            identifier = null;
-            value = 0;
+            CurrentToken = Token.Error;
 
             //remove spaces
-            while ( IsSpace(currentChar) ) { NextChar(); }
+            while ( IsSpace(CurrentChar) ) { NextChar(); }
 
             if ( IsEOF() ) {
-                currentToken = Token.EOF;
+                CurrentToken = Token.EOF;
                 return;
             }
 
-            if ( ScanIdentifier() )
+            if ( ScanIdentifier() is string identifier)
+            {
+                CurrentToken = Token.Identifier;
+                Identifier = identifier;
                 return;
+            }
 
-            if ( ScanNumber() )
+            if ( ScanNumber() is double value)
+            {
+                CurrentToken = Token.Number;
+                Value = value;
                 return;
+            }
 
-            if ( ScanSign() )
+            if ( ScanSign() is Token t)
+            {
+                CurrentToken = t;
                 return;
-
-
+            }
 
             NextChar();
-            throw new LexerException("Unknown token : " + currentChar);
+            throw new LexerException("Unknown token : " + CurrentChar);
         }
 
-        private bool ScanNumber ( )
+        private double? ScanNumber ( )
         {
 
-            if ( !char.IsDigit(currentChar) )
-                return false;
+            if ( !char.IsDigit(CurrentChar) )
+                return null;
 
             bool hasPoint = false;
             StringBuilder builder = new StringBuilder();
-            NumberFormatInfo info = CultureInfo.CurrentCulture.NumberFormat;
 
             while ( true ) {
-                if ( char.IsDigit(currentChar) ) {
-                    builder.Append(currentChar);
+                if ( char.IsDigit(CurrentChar) ) {
+                    builder.Append(CurrentChar);
                 }
-                else if ( (currentChar == '.') && !hasPoint ) {
+                // TODO : add comma support
+                else if ( (CurrentChar == '.') && !hasPoint ) {
                     hasPoint = true;
-                    builder.Append(currentChar);
+                    builder.Append(CurrentChar);
                 }
-                else if ( currentChar == '_' ) {
+                else if ( CurrentChar == '_' ) {
 
                 }
                 else {
@@ -103,91 +99,68 @@ namespace MathParser.Tokenisation
             }
 
             string extracted = builder.ToString();
-            double res = 0;
 
-            if ( double.TryParse(extracted, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out res) ) {
-                currentToken = Token.Number;
-                value = res;
-                return true;
+            if ( double.TryParse(extracted, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out double res) ) {
+                return res;
             }
             else {
-                throw new Exception();
+                throw new Exception("Tokenisator : Cannot parse double.");
             }
         }
 
-        private bool ScanIdentifier ( )
+        private string ScanIdentifier ( )
         {
             StringBuilder builder = new StringBuilder();
 
-            while ( char.IsLetter(currentChar) || currentChar == '_' ) {
-                builder.Append(currentChar);
+            while ( char.IsLetter(CurrentChar) || CurrentChar == '_' ) {
+                builder.Append(CurrentChar);
                 NextChar();
-            }//while close
+            }
 
-            if ( builder.Length == 0 )
-                return false;
-
-            identifier = builder.ToString();
-            currentToken = Token.Identifier;
-            return true;
-
+            return builder.Length == 0 ? null : builder.ToString();
         }
 
-        private bool ScanSign ( )
+        private Token? ScanSign ( )
         {
-
-            switch ( currentChar ) {
+            Token? token;
+            switch ( CurrentChar ) {
                 case '+':
-                    currentToken = Token.Plus;
-                    NextChar();
-                    return true;
+                    token = Token.Plus; break;
 
                 case '-':
-                    currentToken = Token.Minus;
-                    NextChar();
-                    return true;
+                    token = Token.Minus; break;
 
                 case '*':
-                    currentToken = Token.Star;
-                    NextChar();
-                    return true;
+                    token = Token.Star; break;
 
                 case '/':
-                    currentToken = Token.Slash;
-                    NextChar();
-                    return true;
+                    token = Token.Slash; break;
 
                 case '%':
-                    currentToken = Token.Percent;
-                    NextChar();
-                    return true;
+                    token = Token.Percent; break;
+
                 case '(':
-                    currentToken = Token.LPar;
-                    NextChar();
-                    return true;
+                    token = Token.LPar; break;
 
                 case ')':
-                    currentToken = Token.RPar;
-                    NextChar();
-                    return true;
+                    token = Token.RPar; break;
 
                 case ',':
-                    currentToken = Token.Comma;
-                    NextChar();
-                    return true;
+                    token = Token.Comma; break;
 
                 case '^':
-                    this.currentToken = Token.Exp;
-                    NextChar();
-                    return true;
+                    token = Token.Exp; break;
+
                 default:
-                    return false;
+                    token = null; break;
             }
+            NextChar();
+            return token;
         }
 
         private bool IsSpace (char c) => c == ' ' || c == '\t' || c == '\n' || c == '\r';
 
-        private bool IsEOF ( ) => currentChar == '\0';
+        private bool IsEOF ( ) => CurrentChar == '\0';
 
     }
 }

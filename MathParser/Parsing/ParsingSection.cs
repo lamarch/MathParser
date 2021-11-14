@@ -8,6 +8,6 @@ namespace MathParser.Parsing
 {
     public abstract class ParsingSection
     {
-        public abstract Expression Parse ( );
+        public abstract Expression Parse ( ParsingContext context, Action NextParsingSection );
     }
 }
